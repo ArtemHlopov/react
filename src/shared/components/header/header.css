@@ -1,0 +1,10 @@
+.header_wrapper {
+  padding: 0.5rem 3rem;
+  background-color: var(--light-red);
+
+  .header_logo {
+    max-height: 3rem;
+    width: auto;
+    cursor: pointer;
+  }
+}

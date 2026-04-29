@@ -1,0 +1,40 @@
+.search_field_wrapper {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+  padding: 0.5rem 1rem 0 1rem;
+  opacity: 0.9;
+
+  .input_wrapper {
+    flex: 1;
+
+    input {
+      border-radius: 30px;
+      padding: 1.3rem;
+      width: 100%;
+      background-color: var(--light-grey);
+      border: none;
+      font-size: large;
+      box-shadow: 0px -3px 7px -5px rgba(34, 60, 80, 0.6) inset;
+      outline: none;
+    }
+  }
+
+  .button_wrapper {
+    position: absolute;
+    right: 25px;
+    top: 17px;
+
+    button {
+      background: var(--light-red);
+      padding: 0.7rem 1.5rem;
+      border-radius: 30px;
+      border: none;
+      font-size: large;
+      cursor: pointer;
+      color: var(--white);
+    }
+  }
+}

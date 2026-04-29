@@ -1,0 +1,14 @@
+.layout {
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .content_wrapper {
+    position: relative;
+    height: calc(100dvh - 88px);
+    overflow: auto;
+    display: flex;
+  }
+}

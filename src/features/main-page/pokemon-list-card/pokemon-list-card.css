@@ -1,0 +1,38 @@
+img {
+  width: 100%;
+}
+
+h3 {
+  text-align: center;
+}
+
+.pokemon-card {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 30px;
+
+  h3 {
+    border: 1px solid var(--light-red);
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+  }
+
+  img {
+    border-left: 1px solid var(--light-red);
+    border-right: 1px solid var(--light-red);
+  }
+
+  p:last-child {
+    border: 1px solid var(--light-red);
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+  }
+
+  h3,
+  p:last-child {
+    background-color: var(--light-red);
+    color: var(--white);
+    padding: 0.15rem 1rem;
+  }
+}
