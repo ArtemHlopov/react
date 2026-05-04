@@ -6,6 +6,7 @@ import reactPlugin from 'eslint-plugin-react';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import { settings } from 'node:cluster';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -22,6 +23,11 @@ export default defineConfig([
     ],
     languageOptions: {
       globals: globals.browser,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
   },
 ]);
