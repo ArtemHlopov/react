@@ -18,6 +18,10 @@ class ApiService {
     return await response.json();
   }
 
+  getPokemonLink(name: string): string {
+    return `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`;
+  }
+
   setOffsetValue(value: number) {
     this.offset = value;
   }

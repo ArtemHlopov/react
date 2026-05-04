@@ -1,7 +1,7 @@
 .pagination_wrapper {
   padding: 0.5rem 1rem;
   position: fixed;
-  bottom: 30px;
+  bottom: var(--radius-rounded);
   overflow: hidden;
   width: 100%;
 
@@ -10,7 +10,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 1.3rem;
-    border-radius: 30px;
+    border-radius: var(--radius-rounded);
     width: 100%;
     background-color: var(--light-grey);
     border: none;
@@ -34,7 +34,7 @@
         color: var(--white);
         background: var(--light-red);
         padding: 0.5rem 1rem;
-        border-radius: 30px;
+        border-radius: var(--radius-rounded);
         border: none;
         font-size: large;
         cursor: pointer;

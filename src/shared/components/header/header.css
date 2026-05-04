@@ -1,6 +1,9 @@
 .header_wrapper {
   padding: 0.5rem 3rem;
   background-color: var(--light-red);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   .header_logo {
     max-height: 3rem;

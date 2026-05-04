@@ -6,31 +6,30 @@ h3 {
   text-align: center;
 }
 
-.pokemon-card {
+.pokemon_card {
   display: flex;
   flex-direction: column;
 
-  border-radius: 30px;
+  border-radius: var(--radius-rounded);
 
   h3 {
-    border: 1px solid var(--light-red);
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
+    border-top-left-radius: var(--radius-rounded);
+    border-top-right-radius: var(--radius-rounded);
   }
 
-  img {
-    border-left: 1px solid var(--light-red);
-    border-right: 1px solid var(--light-red);
+  .image_wrapper {
+    border-left: var(--card-border);
+    border-right: var(--card-border);
   }
 
   p:last-child {
-    border: 1px solid var(--light-red);
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: var(--radius-rounded);
+    border-bottom-right-radius: var(--radius-rounded);
   }
 
   h3,
   p:last-child {
+    border: var(--card-border);
     background-color: var(--light-red);
     color: var(--white);
     padding: 0.15rem 1rem;

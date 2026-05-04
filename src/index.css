@@ -8,4 +8,38 @@
   --white: #ffffff;
   --light-red: #ff244e;
   --light-grey: #eff0f1;
+
+  --card-border: 1px solid var(--light-red);
+
+  --radius-rounded: 30px;
+}
+
+.pulse {
+  transform: scale(0.85);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.85);
+  }
+  50% {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.85);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

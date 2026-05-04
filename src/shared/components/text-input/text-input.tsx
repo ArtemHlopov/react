@@ -1,7 +1,10 @@
 import { Component, type ChangeEvent, type JSX } from 'react';
 import type { Callback, CustomComponentProps } from '../../models';
+import { generateRandomId } from '../../helpers';
 
 interface TextInputProps extends CustomComponentProps {
+  id?: string;
+  name?: string;
   value?: string;
   className?: string;
   placeholder?: string;
@@ -22,6 +25,8 @@ export class TextInput extends Component<TextInputProps> {
     return (
       <div className="input_wrapper">
         <input
+          id={this.props.id || `$input-text-${generateRandomId()}`}
+          name={this.props.name || 'input-text-name'}
           type="text"
           placeholder={this.props.placeholder || 'Enter value'}
           defaultValue={this.props.value}

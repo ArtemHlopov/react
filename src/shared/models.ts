@@ -4,9 +4,10 @@ export interface FilterProps extends CustomComponentProps {
 }
 
 export interface PaginationProps extends CustomComponentProps {
-  total: number;
+  total: number | string;
   next: string | null;
   previous: string | null;
+  disabled: boolean;
   onLimitChange?: Callback;
   onOffsetChange?: Callback;
 }
@@ -16,7 +17,7 @@ export type CustomComponentProps = Record<string, unknown>;
 export type Callback = (value?: unknown) => void;
 
 export interface PokemonListResponse {
-  count: number;
+  count: number | string;
   next: string | null;
   previous: string | null;
   results: PokemonListResponseResult[];
