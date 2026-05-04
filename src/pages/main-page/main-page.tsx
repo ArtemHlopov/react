@@ -132,7 +132,6 @@ export class MainPage extends Component<FilterProps, MainPageState> {
     value: unknown
   ): Promise<void> => {
     if (value && typeof value === 'number') {
-      console.log('New limit:', value);
       await apiService.setOffsetValue(
         value > apiService.offset ? 0 : apiService.offset - value
       );

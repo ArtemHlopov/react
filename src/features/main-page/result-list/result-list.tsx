@@ -15,7 +15,7 @@ export class ResultList extends Component<ResultListProps> {
     const { list } = this.props;
 
     if (!list || list.length === 0) {
-      return <div className="result-list result-list--empty">No results</div>;
+      return <div className="result_list">No results</div>;
     }
 
     return (
