@@ -21,7 +21,10 @@ export class SearchField extends Component<FilterProps, SearchState> {
 
   protected readonly handleSearchClick = (): void => {
     if (this.props.onFilterChange) {
-      this.props.onFilterChange(this.state.filter);
+      const trimmed = this.state.filter.trim();
+
+      this.setState({ filter: trimmed });
+      this.props.onFilterChange(trimmed);
     }
   };
 

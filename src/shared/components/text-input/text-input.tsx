@@ -29,7 +29,7 @@ export class TextInput extends Component<TextInputProps> {
           name={this.props.name || 'input-text-name'}
           type="text"
           placeholder={this.props.placeholder || 'Enter value'}
-          defaultValue={this.props.value}
+          value={this.props.value}
           className={this.props.className}
           onChange={this.handleChange}
         />
