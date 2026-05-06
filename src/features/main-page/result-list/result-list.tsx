@@ -8,11 +8,16 @@ import './result-list.css';
 
 interface ResultListProps extends CustomComponentProps {
   list: PokemonListResponseResult[];
+  errorMsg: string;
 }
 
 export class ResultList extends Component<ResultListProps> {
   render(): JSX.Element {
-    const { list } = this.props;
+    const { list, errorMsg } = this.props;
+
+    if (errorMsg) {
+      return <div className="result_list">{errorMsg}</div>;
+    }
 
     if (!list || list.length === 0) {
       return <div className="result_list">No results</div>;

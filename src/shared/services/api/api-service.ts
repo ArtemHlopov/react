@@ -8,13 +8,36 @@ class ApiService {
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon?limit=${this.limit}&offset=${this.offset}`
     );
-    if (!response.ok) throw new Error('Network error');
+    if (response.status === 404) {
+      throw new Error('Pokemon list not found');
+    }
+    if (response.status === 400) {
+      throw new Error('Bad pokemon list request');
+    }
+    if (response.status === 500) {
+      throw new Error('Server error, try again later');
+    }
+    if (!response.ok) {
+      throw new Error('Unknown error');
+    }
     return await response.json();
   }
 
   async getPokemonDetails(url: string): Promise<PokemonDetails> {
     const response = await fetch(url);
-    if (!response.ok) throw new Error('Failed to fetch Pokemon details');
+    if (response.status === 404) {
+      throw new Error('Pokemon not found');
+    }
+    if (response.status === 400) {
+      throw new Error('Bad request');
+    }
+    if (response.status === 500) {
+      throw new Error('Server error, try again later');
+    }
+    if (!response.ok) {
+      throw new Error('Unknown error');
+    }
+
     return await response.json();
   }
 

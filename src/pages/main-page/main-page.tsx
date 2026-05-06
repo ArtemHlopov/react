@@ -156,7 +156,10 @@ export class MainPage extends Component<FilterProps, MainPageState> {
           filter={this.state.filter}
           onFilterChange={this.handleNewFilter}
         />
-        <ResultList list={this.state.data?.results || []} />
+        <ResultList
+          list={this.state.data?.results || []}
+          errorMsg={this.state.error || ''}
+        />
 
         <ResultListPagination
           total={this.state.data?.count || ''}
