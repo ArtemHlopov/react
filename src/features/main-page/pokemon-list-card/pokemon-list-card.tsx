@@ -7,7 +7,7 @@ import type {
 import { apiService } from '../../../shared/services/api/api-service';
 import pokeballCardLoader from '../../../assets/pokeball.png';
 import './pokemon-list-card.css';
-import { capitalizeStr } from '../../../shared/helpers';
+import { capitalizeStr } from '../../../shared/helpers/capitalizeStr';
 
 interface PokemonCardProps extends CustomComponentProps {
   pokemonBaseInfo: PokemonListResponseResult;

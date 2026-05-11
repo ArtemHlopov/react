@@ -36,6 +36,7 @@ export class ResultListPagination extends Component<PaginationProps> {
           <span className="pagination_info">Total: {this.props.total}</span>
           <div className="pagination_pages_changer">
             <Button
+              id="previous-page-btn"
               onClick={this.handlePreviousClick}
               text="<"
               disabled={this.props.disabled}
@@ -46,6 +47,7 @@ export class ResultListPagination extends Component<PaginationProps> {
             {Math.ceil(Number(this.props.total) / apiService.limit) ||
               this.defaultPageNumber}
             <Button
+              id="next-page-btn"
               onClick={this.handleNextClick}
               text=">"
               disabled={this.props.disabled}

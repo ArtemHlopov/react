@@ -5,9 +5,9 @@ export interface FilterProps extends CustomComponentProps {
 
 export interface PaginationProps extends CustomComponentProps {
   total: number | string;
-  next: string | null;
-  previous: string | null;
-  disabled: boolean;
+  next?: string | null;
+  previous?: string | null;
+  disabled?: boolean;
   onLimitChange?: Callback;
   onOffsetChange?: Callback;
 }

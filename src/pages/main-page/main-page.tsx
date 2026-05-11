@@ -17,8 +17,6 @@ interface MainPageState {
 
 export class MainPage extends Component<FilterProps, MainPageState> {
   private abortController: AbortController | null = null;
-  private readonly timeoutDuration = 1500;
-  private timeout: number | null = null;
   protected readonly defaultErrorMessage = 'Troubles with loading data';
 
   constructor(props: FilterProps) {
@@ -45,9 +43,6 @@ export class MainPage extends Component<FilterProps, MainPageState> {
 
   private async clearTimeout(): Promise<void> {
     await this.setState({ loading: false });
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
   }
 
   private abortAbortController(): void {
@@ -76,20 +71,16 @@ export class MainPage extends Component<FilterProps, MainPageState> {
   private async getList() {
     this.updateAbortController();
     await this.setState({ loading: true });
-
-    this.timeout = await setTimeout(async () => {
-      try {
-        const data = await apiService.getItemsList();
-
-        await this.setState({ data });
-      } catch (e) {
-        if (e instanceof Error && e.name !== 'AbortError') {
-          this.setState({ error: this.defaultErrorMessage });
-        }
-      } finally {
-        await this.clearTimeout();
+    try {
+      const data = await apiService.getItemsList();
+      await this.setState({ data });
+    } catch (e) {
+      if (e instanceof Error && e.name !== 'AbortError') {
+        this.setState({ error: this.defaultErrorMessage });
       }
-    }, this.timeoutDuration);
+    } finally {
+      await this.clearTimeout();
+    }
   }
 
   private async getPokemonByName(name: string): Promise<void> {
@@ -101,17 +92,15 @@ export class MainPage extends Component<FilterProps, MainPageState> {
       return;
     }
 
-    this.timeout = await setTimeout(async () => {
-      this.setState({
-        loading: false,
-        data: {
-          next: this.state.data?.next || null,
-          previous: this.state.data?.previous || null,
-          count: this.state.data?.count || '',
-          results: [{ name, url: apiService.getPokemonLink(name) }],
-        },
-      });
-    }, this.timeoutDuration);
+    await this.setState({
+      loading: false,
+      data: {
+        next: this.state.data?.next || null,
+        previous: this.state.data?.previous || null,
+        count: this.state.data?.count || '',
+        results: [{ name, url: apiService.getPokemonLink(name) }],
+      },
+    });
   }
 
   protected readonly handleChangePage = async (

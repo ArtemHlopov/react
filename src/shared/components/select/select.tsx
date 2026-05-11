@@ -1,7 +1,7 @@
 import { Component, type ChangeEvent, type JSX } from 'react';
 import type { Callback, CustomComponentProps } from '../../models';
 import './select.css';
-import { generateRandomId } from '../../helpers';
+import { generateRandomId } from '../../helpers/generateRandomId';
 
 interface SelectOptions {
   title: string;

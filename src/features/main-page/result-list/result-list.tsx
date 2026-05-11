@@ -8,7 +8,7 @@ import './result-list.css';
 
 interface ResultListProps extends CustomComponentProps {
   list: PokemonListResponseResult[];
-  errorMsg: string;
+  errorMsg?: string;
 }
 
 export class ResultList extends Component<ResultListProps> {

@@ -1,6 +1,6 @@
 import { Component, type JSX, type MouseEvent } from 'react';
 import type { Callback, CustomComponentProps } from '../../models';
-import { generateRandomId } from '../../helpers';
+import { generateRandomId } from '../../helpers/generateRandomId';
 
 interface ButtonProps extends CustomComponentProps {
   id?: string;

@@ -5,7 +5,7 @@ import { Footer } from '../footer/footer.tsx';
 import './column-layout.css';
 
 interface ColumnLayoutProps extends CustomComponentProps {
-  component: JSX.Element;
+  component?: JSX.Element;
 }
 
 export class ColumnLayout extends Component<ColumnLayoutProps> {
