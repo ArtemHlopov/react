@@ -1,0 +1,20 @@
+.main_page_wrapper {
+  position: relative;
+  flex: 1 1;
+}
+
+.main_page_loader_overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255 255 255 / 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.main_page_loader_image {
+  width: 120px;
+  height: 120px;
+}
