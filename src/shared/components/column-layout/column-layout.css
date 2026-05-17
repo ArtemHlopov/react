@@ -7,7 +7,7 @@
 
   .content_wrapper {
     position: relative;
-    height: calc(100dvh - 88px);
+    height: calc(100dvh - 70px);
     overflow: auto;
     display: flex;
   }

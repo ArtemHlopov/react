@@ -11,7 +11,7 @@ describe('Layout', () => {
 
   it('should render user content', () => {
     const jsx = <div>Test</div>;
-    render(<ColumnLayout component={jsx}></ColumnLayout>);
+    render(<ColumnLayout>{jsx}</ColumnLayout>);
 
     expect(screen.getByText('Test')).toBeInTheDocument();
   });

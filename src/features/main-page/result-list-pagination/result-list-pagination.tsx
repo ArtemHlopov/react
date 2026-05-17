@@ -11,6 +11,7 @@ export const ResultListPagination = ({
   onLimitChange,
   total,
   disabled,
+  currentPage,
 }: PaginationProps) => {
   const defaultPageNumber = 1;
   const paginationOptions = [10, 20, 30];
@@ -46,15 +47,14 @@ export const ResultListPagination = ({
             id="previous-page-btn"
             onClick={handlePreviousClick}
             text="<"
-            disabled={disabled}
+            disabled={disabled || currentPage <= 1}
           />
-          {Math.floor(apiService.offset / apiService.limit) + defaultPageNumber}{' '}
-          /{Math.ceil(Number(total) / apiService.limit) || defaultPageNumber}
+          {currentPage} / {Math.ceil(Number(total) / apiService.limit) || defaultPageNumber}
           <Button
             id="next-page-btn"
             onClick={handleNextClick}
             text=">"
-            disabled={disabled}
+            disabled={disabled || currentPage >= (Math.ceil(Number(total) / apiService.limit) || defaultPageNumber)}
           />
         </div>
         <Select

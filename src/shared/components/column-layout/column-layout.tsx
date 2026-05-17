@@ -1,19 +1,19 @@
-import { type JSX } from 'react';
+import { type ReactNode } from 'react';
 import type { CustomComponentProps } from '../../models';
 import { Header } from '../header/header.tsx';
 import { Footer } from '../footer/footer.tsx';
 import './column-layout.css';
 
 interface ColumnLayoutProps extends CustomComponentProps {
-  component?: JSX.Element;
+  children?: ReactNode;
 }
 
-export const ColumnLayout = ({ component }: ColumnLayoutProps) => {
+export const ColumnLayout = ({ children }: ColumnLayoutProps) => {
   return (
     <div className="layout">
       <Header></Header>
       <div className="content_wrapper">
-        {component || <div>No content</div>}
+        {children || <div>No content</div>}
       </div>
       <Footer></Footer>
     </div>

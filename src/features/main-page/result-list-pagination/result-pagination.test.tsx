@@ -21,6 +21,7 @@ describe('ResultListPagination', () => {
         next="next-page"
         previous="previous-page"
         disabled={false}
+        currentPage={3}
       />
     );
 
@@ -39,6 +40,7 @@ describe('ResultListPagination', () => {
         previous="previous-page"
         disabled={false}
         onOffsetChange={onOffsetChange}
+        currentPage={3}
       />
     );
 
@@ -59,6 +61,7 @@ describe('ResultListPagination', () => {
         previous="previous-page"
         disabled={false}
         onOffsetChange={onOffsetChange}
+        currentPage={3}
       />
     );
 
@@ -79,6 +82,7 @@ describe('ResultListPagination', () => {
         previous={null}
         disabled={false}
         onOffsetChange={onOffsetChange}
+        currentPage={3}
       />
     );
 
@@ -99,6 +103,7 @@ describe('ResultListPagination', () => {
         previous="previous-page"
         disabled={false}
         onLimitChange={onLimitChange}
+        currentPage={3}
       />
     );
 
@@ -115,6 +120,7 @@ describe('ResultListPagination', () => {
         next="next-page"
         previous="previous-page"
         disabled={true}
+        currentPage={3}
       />
     );
 
