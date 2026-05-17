@@ -5,6 +5,7 @@ export const AboutPage = () => {
   return (
     <div className="about_page_wrapper">
       <p>App where you can find your pokemon.</p>
+      <p>Created by Artem Hlopov</p>
       <Link className="nav-link" to={`/`}>
         <button className="button_red_rounded">Home</button>
       </Link>
