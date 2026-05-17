@@ -1,4 +1,3 @@
-import { Component, type JSX } from 'react';
 import type {
   CustomComponentProps,
   PokemonListResponseResult,
@@ -11,24 +10,20 @@ interface ResultListProps extends CustomComponentProps {
   errorMsg?: string;
 }
 
-export class ResultList extends Component<ResultListProps> {
-  render(): JSX.Element {
-    const { list, errorMsg } = this.props;
-
-    if (errorMsg) {
-      return <div className="result_list">{errorMsg}</div>;
-    }
-
-    if (!list || list.length === 0) {
-      return <div className="result_list">No results</div>;
-    }
-
-    return (
-      <div className="result_list">
-        {list.map((item) => (
-          <PokemonListCard key={item.url} pokemonBaseInfo={item} />
-        ))}
-      </div>
-    );
+export const ResultList = ({ list, errorMsg }: ResultListProps) => {
+  if (errorMsg) {
+    return <div className="result_list">{errorMsg}</div>;
   }
-}
+
+  if (!list || list.length === 0) {
+    return <div className="result_list">No results</div>;
+  }
+
+  return (
+    <div className="result_list">
+      {list.map((item) => (
+        <PokemonListCard key={item.url} pokemonBaseInfo={item} />
+      ))}
+    </div>
+  );
+};

@@ -1,4 +1,4 @@
-import { Component, type JSX } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import type { FilterProps, PokemonListResponse } from '../../shared/models';
 import { SearchField } from '../../features/main-page/search-field/search-field';
 import { ResultList } from '../../features/main-page/result-list/result-list';
@@ -8,104 +8,71 @@ import { ResultListPagination } from '../../features/main-page/result-list-pagin
 import pokeballImage from '../../assets/pokeball.png';
 import './main-page.css';
 
-interface MainPageState {
-  filter: string;
-  data?: PokemonListResponse;
-  loading: boolean;
-  error?: string;
-}
+export const MainPage = ({ filter }: FilterProps) => {
+  const defaultErrorMessage = 'Troubles with loading data';
+  const [currentFilter, setCurrentFilter] = useState<string>(filter || '');
+  const [data, setData] = useState<PokemonListResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-export class MainPage extends Component<FilterProps, MainPageState> {
-  private abortController: AbortController | null = null;
-  protected readonly defaultErrorMessage = 'Troubles with loading data';
+  const getList = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await apiService.getItemsList();
+      setData(data);
+    } catch (e) {
+      if (e instanceof Error && e.name !== 'AbortError') {
+        setError(defaultErrorMessage);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  constructor(props: FilterProps) {
-    super(props);
-    this.state = {
-      filter: props.filter || '',
-      loading: false,
+  const getPokemonByName = useCallback(
+    async (name: string): Promise<void> => {
+      setLoading(true);
+
+      if (!name.trim()) {
+        await getList();
+        return;
+      }
+      setData((prev) => ({
+        next: prev?.next || null,
+        previous: prev?.previous || null,
+        count: prev?.count || '',
+        results: [{ name, url: apiService.getPokemonLink(name) }],
+      }));
+      setLoading(false);
+    },
+    [getList]
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (currentFilter) {
+        await getPokemonByName(currentFilter);
+      } else {
+        await getList();
+      }
     };
-  }
+    fetchData();
+  }, [currentFilter, getList, getPokemonByName]);
 
-  componentDidMount(): void {
-    const filter = this.state.filter;
-    if (filter) {
-      this.getPokemonByName(filter);
-    } else {
-      this.getList();
-    }
-  }
-
-  componentWillUnmount(): void {
-    this.abortAbortController();
-    this.clearTimeout();
-  }
-
-  private async clearTimeout(): Promise<void> {
-    await this.setState({ loading: false });
-  }
-
-  private abortAbortController(): void {
-    if (this.abortController) {
-      this.abortController.abort();
-    }
-  }
-
-  private updateAbortController() {
-    this.abortAbortController();
-    this.abortController = new AbortController();
-  }
-
-  protected readonly handleNewFilter = async (
-    value: unknown
-  ): Promise<void> => {
+  const handleNewFilter = async (value: unknown): Promise<void> => {
     const stringValue = String(value).trim();
-    const storageFilter = localStorage.getItem(LS_FILTER_KEY);
-    if (stringValue !== storageFilter) {
+    if (stringValue !== currentFilter) {
       localStorage.setItem(LS_FILTER_KEY, stringValue);
-      await this.setState({ filter: stringValue });
-      await this.getPokemonByName(stringValue);
+      setCurrentFilter(stringValue);
+      if (stringValue) {
+        await getPokemonByName(stringValue);
+      } else {
+        await getList();
+      }
     }
   };
 
-  private async getList() {
-    this.updateAbortController();
-    await this.setState({ loading: true });
-    try {
-      const data = await apiService.getItemsList();
-      await this.setState({ data });
-    } catch (e) {
-      if (e instanceof Error && e.name !== 'AbortError') {
-        this.setState({ error: this.defaultErrorMessage });
-      }
-    } finally {
-      await this.clearTimeout();
-    }
-  }
-
-  private async getPokemonByName(name: string): Promise<void> {
-    this.updateAbortController();
-    await this.setState({ loading: true });
-
-    if (!name.trim()) {
-      await this.getList();
-      return;
-    }
-
-    await this.setState({
-      loading: false,
-      data: {
-        next: this.state.data?.next || null,
-        previous: this.state.data?.previous || null,
-        count: this.state.data?.count || '',
-        results: [{ name, url: apiService.getPokemonLink(name) }],
-      },
-    });
-  }
-
-  protected readonly handleChangePage = async (
-    isNextPage: unknown
-  ): Promise<void> => {
+  const handleChangePage = async (isNextPage: unknown): Promise<void> => {
     if (isNextPage) {
       await apiService.setOffsetValue(apiService.offset + apiService.limit);
     } else {
@@ -114,51 +81,41 @@ export class MainPage extends Component<FilterProps, MainPageState> {
         await apiService.setOffsetValue(newOffset);
       }
     }
-    await this.getList();
+    await getList();
   };
 
-  protected readonly handleLimitChange = async (
-    value: unknown
-  ): Promise<void> => {
+  const handleLimitChange = async (value: unknown): Promise<void> => {
     if (value && typeof value === 'number') {
       await apiService.setOffsetValue(
         value > apiService.offset ? 0 : apiService.offset - value
       );
       await apiService.setLimitValue(value);
-      await this.getList();
+      await getList();
     }
   };
 
-  readonly render = (): JSX.Element => {
-    return (
-      <div className="main_page_wrapper">
-        {this.state.loading ? (
-          <div className="main_page_loader_overlay">
-            <img
-              className="main_page_loader_image spin"
-              src={pokeballImage}
-              alt="Loading pokemon"
-            />
-          </div>
-        ) : null}
-        <SearchField
-          filter={this.state.filter}
-          onFilterChange={this.handleNewFilter}
-        />
-        <ResultList
-          list={this.state.data?.results || []}
-          errorMsg={this.state.error || ''}
-        />
+  return (
+    <div className="main_page_wrapper">
+      {loading ? (
+        <div className="main_page_loader_overlay">
+          <img
+            className="main_page_loader_image spin"
+            src={pokeballImage}
+            alt="Loading pokemon"
+          />
+        </div>
+      ) : null}
+      <SearchField filter={currentFilter} onFilterChange={handleNewFilter} />
+      <ResultList list={data?.results || []} errorMsg={error || ''} />
 
-        <ResultListPagination
-          total={this.state.data?.count || ''}
-          onOffsetChange={this.handleChangePage}
-          onLimitChange={this.handleLimitChange}
-          next={this.state.data?.next || null}
-          previous={this.state.data?.previous || null}
-          disabled={!!this.state.filter}
-        ></ResultListPagination>
-      </div>
-    );
-  };
-}
+      <ResultListPagination
+        total={data?.count || ''}
+        onOffsetChange={handleChangePage}
+        onLimitChange={handleLimitChange}
+        next={data?.next || null}
+        previous={data?.previous || null}
+        disabled={!!currentFilter}
+      ></ResultListPagination>
+    </div>
+  );
+};

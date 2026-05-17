@@ -1,4 +1,4 @@
-import { Component, type JSX } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type {
   CustomComponentProps,
   PokemonListResponseResult,
@@ -13,97 +13,70 @@ interface PokemonCardProps extends CustomComponentProps {
   pokemonBaseInfo: PokemonListResponseResult;
 }
 
-interface PokemonCardState {
-  details?: PokemonDetails;
-  loading: boolean;
-  error?: string;
-}
+export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
+  const unknownName = 'Unknown pokemon';
 
-export class PokemonListCard extends Component<
-  PokemonCardProps,
-  PokemonCardState
-> {
-  protected readonly unknownName = 'Unknown pokemon';
-  private readonly minLoadingDuration = 3000;
-  private timeout: number | null = null;
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
+  const [details, setDetails] = useState<PokemonDetails | null>(null);
 
-  constructor(props: PokemonCardProps) {
-    super(props);
-    this.state = {
-      loading: true,
-    };
-  }
-
-  componentDidMount(): void {
-    this.timeout = setTimeout(() => {
-      this.fetchPokemonDetails();
-    }, this.minLoadingDuration);
-  }
-
-  componentWillUnmount(): void {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
-  }
-
-  private async fetchPokemonDetails(): Promise<void> {
+  const fetchPokemonDetails = useCallback(async (): Promise<void> => {
     try {
-      const details = await apiService.getPokemonDetails(
-        this.props.pokemonBaseInfo.url
-      );
-      this.setState({
-        details,
-        loading: false,
-      });
+      const details = await apiService.getPokemonDetails(pokemonBaseInfo.url);
+      setDetails(details);
     } catch (error) {
-      this.setState({
-        error: error instanceof Error ? error.message : 'Unknown error',
-        loading: false,
-      });
+      setError(error instanceof Error ? error.message : 'Unknown error');
+    } finally {
+      setLoading(false);
     }
-  }
+  }, [pokemonBaseInfo]);
 
-  private getPokemonImageUrl(): string {
-    const { details } = this.state;
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchPokemonDetails();
+    };
+    fetchData();
+  }, [fetchPokemonDetails]);
+
+  const getPokemonImageUrl = useCallback(() => {
     return (
       details?.sprites?.other?.['official-artwork']?.front_default ||
       details?.sprites?.other?.home?.front_default ||
       details?.sprites?.other?.dream_world?.front_default ||
       pokeballCardLoader
     );
-  }
+  }, [details]);
 
-  render(): JSX.Element {
-    const { loading, error, details } = this.state;
-    const imageSrc = loading ? pokeballCardLoader : this.getPokemonImageUrl();
-    const description =
-      details?.types && details?.types.length > 0
-        ? details?.types.map((type) => type.type.name).join(', ')
-        : 'Unknown type';
-    const pokemonName = details?.name
-      ? capitalizeStr(details?.name)
-      : this.unknownName;
+  const imageSrc = useMemo(() => {
+    return loading ? pokeballCardLoader : getPokemonImageUrl();
+  }, [loading, getPokemonImageUrl]);
+  const description =
+    details?.types && details?.types.length > 0
+      ? details?.types.map((type) => type.type.name).join(', ')
+      : 'Unknown type';
+  const pokemonName = details?.name
+    ? capitalizeStr(details?.name)
+    : unknownName;
 
-    return (
-      <div className="pokemon_card">
-        <h3>{pokemonName}</h3>
-        <div className="image_wrapper">
-          {' '}
-          <img
-            className={`pokemon_card_image ${loading ? 'pulse' : ''}`}
-            src={imageSrc}
-            alt={pokemonName}
-          />
-        </div>
-
-        <p className="pokemon_card_description">
-          {loading
-            ? 'Loading...'
-            : error
-              ? `Error: ${error}`
-              : `Types: ${description}`}
-        </p>
+  return (
+    <div className="pokemon_card">
+      <h3>{pokemonName}</h3>
+      <div className="image_wrapper">
+        {' '}
+        <img
+          className={`pokemon_card_image ${loading ? 'pulse' : ''}`}
+          src={imageSrc}
+          alt={pokemonName}
+        />
       </div>
-    );
-  }
-}
+
+      <p className="pokemon_card_description">
+        {loading
+          ? 'Loading...'
+          : error
+            ? `Error: ${error}`
+            : `Types: ${description}`}
+      </p>
+    </div>
+  );
+};

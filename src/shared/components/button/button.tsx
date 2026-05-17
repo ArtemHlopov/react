@@ -1,6 +1,5 @@
-import { Component, type JSX, type MouseEvent } from 'react';
+import { useId, type MouseEvent } from 'react';
 import type { Callback, CustomComponentProps } from '../../models';
-import { generateRandomId } from '../../helpers/generateRandomId';
 
 interface ButtonProps extends CustomComponentProps {
   id?: string;
@@ -10,28 +9,29 @@ interface ButtonProps extends CustomComponentProps {
   onClick?: Callback;
 }
 
-export class Button extends Component<ButtonProps> {
-  protected readonly handleClick = (
-    event: MouseEvent<HTMLButtonElement>
-  ): void => {
-    const callback = this.props.onClick;
-    if (callback) {
-      callback(event);
+export const Button = ({
+  id,
+  text = 'Click',
+  className,
+  disabled = false,
+  onClick,
+}: ButtonProps) => {
+  const componentId = useId();
+  const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
+    if (onClick) {
+      onClick(event);
     }
   };
-
-  readonly render = (): JSX.Element => {
-    return (
-      <div className="button_wrapper">
-        <button
-          id={this.props.id || `button-${generateRandomId()}`}
-          className={this.props.className}
-          onClick={this.handleClick}
-          disabled={this.props.disabled}
-        >
-          {this.props.text || 'Click'}
-        </button>
-      </div>
-    );
-  };
-}
+  return (
+    <div className="button_wrapper">
+      <button
+        id={id || componentId}
+        className={className}
+        onClick={handleClick}
+        disabled={disabled}
+      >
+        {text}
+      </button>
+    </div>
+  );
+};

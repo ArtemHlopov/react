@@ -1,6 +1,5 @@
-import { Component, type ChangeEvent, type JSX } from 'react';
+import { useId, type ChangeEvent } from 'react';
 import type { Callback, CustomComponentProps } from '../../models';
-import { generateRandomId } from '../../helpers/generateRandomId';
 
 interface TextInputProps extends CustomComponentProps {
   id?: string;
@@ -11,29 +10,29 @@ interface TextInputProps extends CustomComponentProps {
   onChange?: Callback;
 }
 
-export class TextInput extends Component<TextInputProps> {
-  protected readonly handleChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    const callback = this.props.onChange;
-    if (callback) {
-      callback(event.target.value);
-    }
-  };
+export const TextInput = ({
+  id,
+  name = 'input-text-name',
+  value,
+  className,
+  placeholder = 'Enter value',
+  onChange,
+}: TextInputProps) => {
+  const componentId = useId();
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void =>
+    onChange?.(event.target.value);
 
-  readonly render = (): JSX.Element => {
-    return (
-      <div className="input_wrapper">
-        <input
-          id={this.props.id || `input-text-${generateRandomId()}`}
-          name={this.props.name || 'input-text-name'}
-          type="text"
-          placeholder={this.props.placeholder || 'Enter value'}
-          value={this.props.value}
-          className={this.props.className}
-          onChange={this.handleChange}
-        />
-      </div>
-    );
-  };
-}
+  return (
+    <div className="input_wrapper">
+      <input
+        id={id || componentId}
+        name={name}
+        type="text"
+        placeholder={placeholder}
+        value={value}
+        className={className}
+        onChange={handleChange}
+      />
+    </div>
+  );
+};

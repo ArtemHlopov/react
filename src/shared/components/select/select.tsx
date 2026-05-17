@@ -1,7 +1,6 @@
-import { Component, type ChangeEvent, type JSX } from 'react';
+import { useId, type ChangeEvent } from 'react';
 import type { Callback, CustomComponentProps } from '../../models';
 import './select.css';
-import { generateRandomId } from '../../helpers/generateRandomId';
 
 interface SelectOptions {
   title: string;
@@ -15,31 +14,29 @@ interface SelectProps extends CustomComponentProps {
   onSelectChange?: Callback;
 }
 
-export class Select extends Component<SelectProps> {
-  protected readonly handleChange = (
-    event: ChangeEvent<HTMLSelectElement>
-  ): void => {
-    const callback = this.props.onSelectChange;
-    if (callback) {
-      callback(event.target.value);
-    }
-  };
+export const Select = ({
+  id,
+  options,
+  disabled = false,
+  onSelectChange,
+}: SelectProps) => {
+  const componentId = useId();
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>): void =>
+    onSelectChange?.(event.target.value);
 
-  readonly render = (): JSX.Element => {
-    return (
-      <div className="select_wrapper">
-        <select
-          id={this.props.id || `select-${generateRandomId()}`}
-          onChange={this.handleChange}
-          disabled={this.props.disabled}
-        >
-          {this.props.options.map((option, index) => (
-            <option key={`option-${index}-key`} value={option.value}>
-              {option.title}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  };
-}
+  return (
+    <div className="select_wrapper">
+      <select
+        id={id || componentId}
+        onChange={handleChange}
+        disabled={disabled}
+      >
+        {options.map((option, index) => (
+          <option key={`option-${index}-key`} value={option.value}>
+            {option.title}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
