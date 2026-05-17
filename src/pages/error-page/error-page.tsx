@@ -6,7 +6,7 @@ export const ErrorPage = () => {
       <h1>404</h1>
       <p>Page not found</p>
       <Link className="nav-link" to={`/`}>
-        <button>Home</button>
+        <button className="button_red_rounded">Home</button>
       </Link>
     </div>
   );

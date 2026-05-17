@@ -1,3 +1,4 @@
+import { MemoryRouter } from 'react-router-dom';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -120,7 +121,11 @@ describe('MainPage', () => {
     const deferred = createDeferred<PokemonListResponse>();
     vi.spyOn(apiService, 'getItemsList').mockReturnValueOnce(deferred.promise);
 
-    render(<MainPage filter="" />);
+    render(
+      <MemoryRouter>
+        <MainPage filter="" />
+      </MemoryRouter>
+    );
 
     expect(
       await screen.findByRole('img', { name: 'Loading pokemon' })
@@ -148,7 +153,11 @@ describe('MainPage', () => {
       .spyOn(apiService, 'getPokemonLink')
       .mockReturnValue('https://pokeapi.co/api/v2/pokemon/pikachu');
 
-    render(<MainPage filter="Pikachu" />);
+    render(
+      <MemoryRouter>
+        <MainPage filter="Pikachu" />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByText('Pikachu')).toBeInTheDocument();
     expect(getItemsListSpy).not.toHaveBeenCalled();
@@ -159,12 +168,18 @@ describe('MainPage', () => {
 
   it('stores a trimmed search term in localStorage and renders the searched pokemon', async () => {
     const user = userEvent.setup();
-    vi.spyOn(apiService, 'getItemsList').mockResolvedValueOnce(mockListResponse);
+    vi.spyOn(apiService, 'getItemsList').mockResolvedValueOnce(
+      mockListResponse
+    );
     const getPokemonLinkSpy = vi
       .spyOn(apiService, 'getPokemonLink')
       .mockReturnValue('https://pokeapi.co/api/v2/pokemon/bulbasaur');
 
-    render(<MainPage filter="" />);
+    render(
+      <MemoryRouter>
+        <MainPage filter="" />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByText('bulbasaur')).toBeInTheDocument();
 
@@ -172,7 +187,9 @@ describe('MainPage', () => {
 
     expect(localStorage.getItem(LS_FILTER_KEY)).toBe('bulbasaur');
     expect(getPokemonLinkSpy).toHaveBeenCalledWith('bulbasaur');
-    expect(await screen.findByText('Search filter: bulbasaur')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Search filter: bulbasaur')
+    ).toBeInTheDocument();
     expect(screen.getByText('Pagination disabled: true')).toBeInTheDocument();
   });
 
@@ -182,7 +199,11 @@ describe('MainPage', () => {
       .spyOn(apiService, 'getItemsList')
       .mockResolvedValueOnce(mockListResponse);
 
-    render(<MainPage filter="pikachu" />);
+    render(
+      <MemoryRouter>
+        <MainPage filter="pikachu" />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByText('pikachu')).toBeInTheDocument();
 
@@ -200,25 +221,35 @@ describe('MainPage', () => {
       new Error('Network issue')
     );
 
-    render(<MainPage filter="" />);
+    render(
+      <MemoryRouter>
+        <MainPage filter="" />
+      </MemoryRouter>
+    );
 
     expect(
       await screen.findByText('Troubles with loading data')
     ).toBeInTheDocument();
   });
 
-  it('ignores abort errors and keeps the page usable', async () => {
-    const abortError = new Error('Aborted');
-    abortError.name = 'AbortError';
+  it('uses the saved filter from localStorage when the prop is empty', async () => {
+    const getItemsListSpy = vi.spyOn(apiService, 'getItemsList');
+    const getPokemonLinkSpy = vi
+      .spyOn(apiService, 'getPokemonLink')
+      .mockReturnValue('https://pokeapi.co/api/v2/pokemon/charizard');
 
-    vi.spyOn(apiService, 'getItemsList').mockRejectedValueOnce(abortError);
+    localStorage.setItem(LS_FILTER_KEY, 'charizard');
 
-    render(<MainPage filter="" />);
+    render(
+      <MemoryRouter>
+        <MainPage filter="" />
+      </MemoryRouter>
+    );
 
-    expect(await screen.findByText('No results')).toBeInTheDocument();
-    expect(
-      screen.queryByText('Troubles with loading data')
-    ).not.toBeInTheDocument();
+    expect(await screen.findByText('charizard')).toBeInTheDocument();
+    expect(getItemsListSpy).not.toHaveBeenCalled();
+    expect(getPokemonLinkSpy).toHaveBeenCalledWith('charizard');
+    expect(screen.getByText('Pagination disabled: true')).toBeInTheDocument();
   });
 
   it('changes the page and requests a fresh list when the next page is selected', async () => {
@@ -228,7 +259,11 @@ describe('MainPage', () => {
       .mockResolvedValueOnce(nextPageResponse);
     const setOffsetValueSpy = vi.spyOn(apiService, 'setOffsetValue');
 
-    render(<MainPage filter="" />);
+    render(
+      <MemoryRouter>
+        <MainPage filter="" />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByText('bulbasaur')).toBeInTheDocument();
 
@@ -248,13 +283,17 @@ describe('MainPage', () => {
     const setOffsetValueSpy = vi.spyOn(apiService, 'setOffsetValue');
     const setLimitValueSpy = vi.spyOn(apiService, 'setLimitValue');
 
-    render(<MainPage filter="" />);
+    render(
+      <MemoryRouter>
+        <MainPage filter="" />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByText('bulbasaur')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Set limit 20' }));
 
-    expect(setOffsetValueSpy).toHaveBeenCalledWith(10);
+    expect(setOffsetValueSpy).toHaveBeenCalledWith(0);
     expect(setLimitValueSpy).toHaveBeenCalledWith(20);
   });
 });

@@ -12,6 +12,7 @@ interface SelectProps extends CustomComponentProps {
   options: SelectOptions[];
   disabled?: boolean;
   onSelectChange?: Callback;
+  value?: number | string;
 }
 
 export const Select = ({
@@ -19,6 +20,7 @@ export const Select = ({
   options,
   disabled = false,
   onSelectChange,
+  value,
 }: SelectProps) => {
   const componentId = useId();
   const handleChange = (event: ChangeEvent<HTMLSelectElement>): void =>
@@ -30,6 +32,7 @@ export const Select = ({
         id={id || componentId}
         onChange={handleChange}
         disabled={disabled}
+        value={value}
       >
         {options.map((option, index) => (
           <option key={`option-${index}-key`} value={option.value}>

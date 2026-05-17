@@ -8,6 +8,7 @@ import { apiService } from '../../../shared/services/api/api-service';
 import pokeballCardLoader from '../../../assets/pokeball.png';
 import './pokemon-list-card.css';
 import { capitalizeStr } from '../../../shared/helpers/capitalizeStr';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface PokemonCardProps extends CustomComponentProps {
   pokemonBaseInfo: PokemonListResponseResult;
@@ -19,6 +20,9 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [details, setDetails] = useState<PokemonDetails | null>(null);
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const fetchPokemonDetails = useCallback(async (): Promise<void> => {
     try {
@@ -37,6 +41,13 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
     };
     fetchData();
   }, [fetchPokemonDetails]);
+
+  const handleCardClick = (): void => {
+    if (!details) {
+      return;
+    }
+    navigate(`details/${details.name}?${searchParams}`);
+  };
 
   const getPokemonImageUrl = useCallback(() => {
     return (
@@ -59,7 +70,7 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
     : unknownName;
 
   return (
-    <div className="pokemon_card">
+    <div className="pokemon_card" onClick={handleCardClick}>
       <h3>{pokemonName}</h3>
       <div className="image_wrapper">
         {' '}

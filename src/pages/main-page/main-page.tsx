@@ -6,23 +6,27 @@ import { ResultList } from '../../features/main-page/result-list/result-list';
 import { LS_FILTER_KEY } from '../../shared/constants';
 import { apiService } from '../../shared/services/api/api-service';
 import { ResultListPagination } from '../../features/main-page/result-list-pagination/result-list-pagination';
+import { useLocalStorage } from '../../shared/hooks/use-local-storage';
 import pokeballImage from '../../assets/pokeball.png';
 import './main-page.css';
+import { Outlet } from 'react-router-dom';
 
 export const MainPage = ({ filter }: FilterProps) => {
   const defaultErrorMessage = 'Troubles with loading data';
+  const { getLsValue, setLsValue } = useLocalStorage(LS_FILTER_KEY);
   const [currentFilter, setCurrentFilter] = useState<string>(
-    filter || localStorage.getItem(LS_FILTER_KEY) || ''
+    () => filter || getLsValue()
   );
   const { currentPage, setPage } = usePagination();
   const [data, setData] = useState<PokemonListResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [limit, setLimit] = useState<number>(apiService.limit);
 
   const getList = useCallback(async () => {
     setLoading(true);
     try {
-      apiService.setOffsetValue((currentPage - 1) * apiService.limit);
+      apiService.setOffsetValue((currentPage - 1) * limit);
       const data = await apiService.getItemsList();
       setData(data);
     } catch (e) {
@@ -32,7 +36,7 @@ export const MainPage = ({ filter }: FilterProps) => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage]);
+  }, [currentPage, limit]);
 
   const getPokemonByName = useCallback(
     async (name: string): Promise<void> => {
@@ -67,7 +71,7 @@ export const MainPage = ({ filter }: FilterProps) => {
   const handleNewFilter = async (value: unknown): Promise<void> => {
     const stringValue = String(value).trim();
     if (stringValue !== currentFilter) {
-      localStorage.setItem(LS_FILTER_KEY, stringValue);
+      setLsValue(stringValue);
       setCurrentFilter(stringValue);
       setPage(1);
       if (stringValue) {
@@ -89,6 +93,7 @@ export const MainPage = ({ filter }: FilterProps) => {
   const handleLimitChange = async (value: unknown): Promise<void> => {
     if (value && typeof value === 'number') {
       apiService.setLimitValue(value);
+      setLimit(value);
       setPage(1);
     }
   };
@@ -104,20 +109,23 @@ export const MainPage = ({ filter }: FilterProps) => {
           />
         </div>
       ) : null}
-      <SearchField filter={currentFilter} onFilterChange={handleNewFilter} />
-      <ResultList list={data?.results || []} errorMsg={error || ''} />
+      <div className="main_page_left_column">
+        <SearchField filter={currentFilter} onFilterChange={handleNewFilter} />
+        <ResultList list={data?.results || []} errorMsg={error || ''} />
 
-      {!loading && data && (
-        <ResultListPagination
-          total={data?.count || ''}
-          onOffsetChange={handleChangePage}
-          onLimitChange={handleLimitChange}
-          next={data?.next || null}
-          previous={data?.previous || null}
-          disabled={!!currentFilter}
-          currentPage={currentPage}
-        ></ResultListPagination>
-      )}
+        {!loading && data && (
+          <ResultListPagination
+            total={data?.count || ''}
+            onOffsetChange={handleChangePage}
+            onLimitChange={handleLimitChange}
+            next={data?.next || null}
+            previous={data?.previous || null}
+            disabled={!!currentFilter}
+            currentPage={currentPage}
+          ></ResultListPagination>
+        )}
+      </div>
+      <Outlet />
     </div>
   );
 };

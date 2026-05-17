@@ -1,48 +1,64 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
-import { LS_FILTER_KEY } from './shared/constants';
 
-const { mainPageSpy } = vi.hoisted(() => ({
-  mainPageSpy: vi.fn(),
+const { columnLayoutSpy, outletSpy, shouldThrow } = vi.hoisted(() => ({
+  columnLayoutSpy: vi.fn(),
+  outletSpy: vi.fn(),
+  shouldThrow: { value: false },
 }));
 
-vi.mock('./pages/main-page/main-page', () => ({
-  MainPage: ({ filter }: { filter: string }) => {
-    mainPageSpy(filter);
-    if (filter === 'throw-error') {
-      throw new Error('Main page failed');
+vi.mock('./shared/components/column-layout/column-layout', () => ({
+  ColumnLayout: ({ children }: { children: React.ReactNode }) => {
+    columnLayoutSpy(children);
+
+    if (shouldThrow.value) {
+      throw new Error('Layout failed');
     }
 
-    return <div>Main page filter: {filter}</div>;
+    return <div data-testid="layout">{children}</div>;
   },
 }));
 
+vi.mock('react-router-dom', async () => {
+  const actual =
+    await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
+
+  return {
+    ...actual,
+    Outlet: () => {
+      outletSpy();
+      return <div>Outlet content</div>;
+    },
+  };
+});
+
 describe('App', () => {
   beforeEach(() => {
-    localStorage.clear();
-    mainPageSpy.mockClear();
+    columnLayoutSpy.mockClear();
+    outletSpy.mockClear();
+    shouldThrow.value = false;
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('passes the saved filter from localStorage to MainPage', () => {
-    localStorage.setItem(LS_FILTER_KEY, 'pikachu');
-
+  it('renders the layout with the routed content inside the error boundary', () => {
     render(<App />);
 
-    expect(screen.getByText('Main page filter: pikachu')).toBeInTheDocument();
-    expect(mainPageSpy).toHaveBeenCalledWith('pikachu');
+    expect(screen.getByTestId('layout')).toBeInTheDocument();
+    expect(screen.getByText('Outlet content')).toBeInTheDocument();
+    expect(columnLayoutSpy).toHaveBeenCalledTimes(1);
+    expect(outletSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('shows the error boundary fallback when MainPage throws', () => {
+  it('shows the fallback when the wrapped tree throws', () => {
     const consoleErrorSpy = vi
       .spyOn(console, 'error')
       .mockImplementation(() => undefined);
 
-    localStorage.setItem(LS_FILTER_KEY, 'throw-error');
+    shouldThrow.value = true;
 
     render(<App />);
 

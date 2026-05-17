@@ -5,9 +5,36 @@
   justify-content: space-between;
   align-items: center;
 
+  .header_nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
   .header_logo {
     max-height: 3rem;
     width: auto;
     cursor: pointer;
   }
+}
+
+.header_nav {
+  display: flex;
+  gap: 2rem;
+}
+.header_link {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.4rem 0.8rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+.header_link:hover {
+  opacity: 0.8;
+}
+
+.header_link.active {
+  border-bottom: 3px solid var(--white);
 }

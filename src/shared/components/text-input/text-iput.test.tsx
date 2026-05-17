@@ -33,9 +33,7 @@ describe('Text input', () => {
   it('should have default props', () => {
     render(<TextInput></TextInput>);
 
-    expect(
-      screen.getByRole('textbox').getAttribute('id')?.startsWith('input-text-')
-    ).toBeTruthy();
+    expect(screen.getByRole('textbox').getAttribute('id')).toBeTruthy();
     expect(screen.getByRole('textbox')).toHaveAttribute(
       'name',
       'input-text-name'

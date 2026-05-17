@@ -49,18 +49,25 @@ export const ResultListPagination = ({
             text="<"
             disabled={disabled || currentPage <= 1}
           />
-          {currentPage} / {Math.ceil(Number(total) / apiService.limit) || defaultPageNumber}
+          {currentPage} /{' '}
+          {Math.ceil(Number(total) / apiService.limit) || defaultPageNumber}
           <Button
             id="next-page-btn"
             onClick={handleNextClick}
             text=">"
-            disabled={disabled || currentPage >= (Math.ceil(Number(total) / apiService.limit) || defaultPageNumber)}
+            disabled={
+              disabled ||
+              currentPage >=
+                (Math.ceil(Number(total) / apiService.limit) ||
+                  defaultPageNumber)
+            }
           />
         </div>
         <Select
           disabled={disabled}
           onSelectChange={handleSelectChange}
           options={selectOptions}
+          value={apiService.limit}
         ></Select>
       </div>
     </div>

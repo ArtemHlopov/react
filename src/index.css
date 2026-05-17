@@ -43,3 +43,12 @@
     transform: rotate(360deg);
   }
 }
+
+.button_red_rounded {
+  background-color: var(--light-red);
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-rounded);
+}

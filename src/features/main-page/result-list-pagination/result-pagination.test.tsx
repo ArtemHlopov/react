@@ -26,7 +26,7 @@ describe('ResultListPagination', () => {
     );
 
     expect(screen.getByText('Total: 95')).toBeInTheDocument();
-    expect(container).toHaveTextContent('3 /10');
+    expect(container).toHaveTextContent('3 / 10');
   });
 
   it('calls the previous page callback when a previous page exists', async () => {
