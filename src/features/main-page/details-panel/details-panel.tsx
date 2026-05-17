@@ -71,7 +71,10 @@ export const DetailsPanel = () => {
           </div>
           <p>Height: {details.height}</p>
           <p>Weight: {details.weight}</p>
-          <p>Types: {details.types.map((type) => type.type.name).join(', ')}</p>
+          <p>
+            Types:{' '}
+            {(details.types || []).map((type) => type.type.name).join(', ')}
+          </p>
         </div>
       ) : (
         <h2>No details found.</h2>
