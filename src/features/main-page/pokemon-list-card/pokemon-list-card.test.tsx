@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { PokemonListCard } from './pokemon-list-card';
+import { Provider } from 'react-redux';
+import { store } from '../../../store/store';
 import { apiService } from '../../../shared/services/api/api-service';
 import type {
   PokemonDetails,
@@ -72,28 +74,30 @@ const LocationDisplay = () => {
 
 const renderCard = (initialEntry = '/?page=2') =>
   render(
-    <MemoryRouter initialEntries={[initialEntry]}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <PokemonListCard pokemonBaseInfo={mockPokemonBaseInfo} />
-              <LocationDisplay />
-            </>
-          }
-        />
-        <Route
-          path="/details/:name"
-          element={
-            <>
-              <div>Pokemon details route</div>
-              <LocationDisplay />
-            </>
-          }
-        />
-      </Routes>
-    </MemoryRouter>
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <PokemonListCard pokemonBaseInfo={mockPokemonBaseInfo} />
+                <LocationDisplay />
+              </>
+            }
+          />
+          <Route
+            path="/details/:name"
+            element={
+              <>
+                <div>Pokemon details route</div>
+                <LocationDisplay />
+              </>
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    </Provider>
   );
 
 describe('PokemonListCard', () => {

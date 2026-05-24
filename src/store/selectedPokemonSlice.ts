@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { PokemonDetails } from '../shared/models';
+import type { PokemonListResponseResult } from '../shared/models';
 import type { RootState } from './store';
 
 interface SelectedPokemonsState {
-  selectedPokemon: PokemonDetails[];
+  selectedPokemon: PokemonListResponseResult[];
 }
 
 const initialState: SelectedPokemonsState = {
@@ -14,13 +14,16 @@ const selectedPokemonsSlice = createSlice({
   name: 'selectedPokemons',
   initialState: initialState,
   reducers: {
-    toggleSelectedPokemon: (state, action: PayloadAction<PokemonDetails>) => {
+    toggleSelectedPokemon: (
+      state,
+      action: PayloadAction<PokemonListResponseResult>
+    ) => {
       const pokemonName = action.payload;
       const exist = state.selectedPokemon.find(
         (pokemon) => pokemon.name === pokemonName.name
       );
       if (exist) {
-        state.selectedPokemon.filter(
+        state.selectedPokemon = state.selectedPokemon.filter(
           (pokemon) => pokemon.name !== pokemonName.name
         );
       } else {

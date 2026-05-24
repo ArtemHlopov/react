@@ -52,14 +52,24 @@ describe('main.tsx', () => {
   it('creates a React root and renders RouterProvider inside StrictMode', async () => {
     await import('./main.tsx');
 
-    expect(createRootSpy).toHaveBeenCalledWith(
-      document.getElementById('root')
-    );
+    expect(createRootSpy).toHaveBeenCalledWith(document.getElementById('root'));
     expect(renderSpy).toHaveBeenCalledTimes(1);
 
     const [renderedTree] = renderSpy.mock.calls[0];
     expect(renderedTree.type).toBe(StrictMode);
-    expect(renderedTree.props.children.type).toBe(RouterProvider);
-    expect(renderedTree.props.children.props.router).toBe(mockRouter);
+
+    const { Provider: DynamicProvider } = await import('react-redux');
+    const { DarkThemeProvider: DynamicDarkThemeProvider } =
+      await import('./shared/context/appThemeContextProvider');
+
+    const provider = renderedTree.props.children;
+    expect(provider.type).toBe(DynamicProvider);
+
+    const themeProvider = provider.props.children;
+    expect(themeProvider.type).toBe(DynamicDarkThemeProvider);
+
+    const routerProvider = themeProvider.props.children;
+    expect(routerProvider.type).toBe(RouterProvider);
+    expect(routerProvider.props.router).toBe(mockRouter);
   });
 });

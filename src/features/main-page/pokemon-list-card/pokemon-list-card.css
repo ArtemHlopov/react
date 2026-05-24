@@ -3,7 +3,14 @@ img {
 }
 
 h3 {
-  text-align: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  input {
+    width: 1.25rem;
+    cursor: pointer;
+  }
 }
 
 .pokemon_card {

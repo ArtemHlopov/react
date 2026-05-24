@@ -10,6 +10,11 @@ import './pokemon-list-card.css';
 import { capitalizeStr } from '../../../shared/helpers/capitalizeStr';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import {
+  selectedPokemonsSelector,
+  toggleSelectedPokemon,
+} from '../../../store/selectedPokemonSlice';
 
 interface PokemonCardProps extends CustomComponentProps {
   pokemonBaseInfo: PokemonListResponseResult;
@@ -25,6 +30,12 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { isDarkTheme } = useContext(DarkThemeContext);
+  const dispatch = useAppDispatch();
+  const selectedPokemons = useAppSelector(selectedPokemonsSelector);
+
+  const isPokemonSelected = selectedPokemons.find(
+    (pokemon) => pokemon.name === pokemonBaseInfo.name
+  );
 
   const fetchPokemonDetails = useCallback(async (): Promise<void> => {
     try {
@@ -49,6 +60,10 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
       return;
     }
     navigate(`details/${details.name}?${searchParams}`);
+  };
+
+  const handleCheckboxClick = (): void => {
+    dispatch(toggleSelectedPokemon(pokemonBaseInfo));
   };
 
   const getPokemonImageUrl = useCallback(() => {
@@ -76,7 +91,15 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
       className={`pokemon_card ${isDarkTheme ? 'pokemon_card__dark' : ''}`}
       onClick={handleCardClick}
     >
-      <h3>{pokemonName}</h3>
+      <h3>
+        <input
+          type="checkbox"
+          onClick={(e) => e.stopPropagation()}
+          checked={!!isPokemonSelected}
+          onChange={handleCheckboxClick}
+        />
+        <span>{pokemonName}</span>
+      </h3>
       <div className="image_wrapper">
         {' '}
         <img

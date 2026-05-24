@@ -43,16 +43,6 @@
   border-bottom: 3px solid var(--white);
 }
 
-.header_button {
-  padding: 0.5rem;
-  color: var(--white);
-  border-radius: var(--radius-rounded);
-  cursor: pointer;
-  text-wrap: nowrap;
-  border-color: var(--white);
-  background-color: transparent;
-}
-
 .header_actions {
   display: flex;
   gap: 1rem;

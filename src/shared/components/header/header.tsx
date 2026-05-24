@@ -52,12 +52,12 @@ export const Header = () => {
       </div>
       <div className="header_actions">
         <Button
-          className="header_button"
+          className="rounded_button"
           text="Test error"
           onClick={handleTestErrorClick}
         />
         <Button
-          className={`header_button ${isDarkTheme ? 'theme_button__dark' : ''}`}
+          className={`rounded_button ${isDarkTheme ? 'theme_button__dark' : ''}`}
           text={isDarkTheme ? '☀️ Light Mode' : '🌙 Dark Mode'}
           onClick={toggleTheme}
         />

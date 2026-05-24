@@ -55,3 +55,13 @@
   border: none;
   border-radius: var(--radius-rounded);
 }
+
+.rounded_button {
+  padding: 0.5rem;
+  color: var(--white);
+  border-radius: var(--radius-rounded);
+  cursor: pointer;
+  text-wrap: nowrap;
+  border-color: var(--white);
+  background-color: transparent;
+}

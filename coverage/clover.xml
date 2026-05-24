@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1779651729045" clover="3.2.0">
+  <project timestamp="1779651729045" name="All files">
+    <metrics statements="305" coveredstatements="294" conditionals="197" coveredconditionals="158" methods="85" coveredmethods="80" elements="587" coveredelements="532" complexity="0" loc="305" ncloc="305" packages="23" files="29" classes="29"/>
+    <package name="src">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="App.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/App.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="4" type="stmt"/>
+      </file>
+      <file name="main.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/main.tsx">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="10" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.features.main-page.details-panel">
+      <metrics statements="26" coveredstatements="26" conditionals="18" coveredconditionals="12" methods="6" coveredmethods="6"/>
+      <file name="details-panel.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/features/main-page/details-panel/details-panel.tsx">
+        <metrics statements="26" coveredstatements="26" conditionals="18" coveredconditionals="12" methods="6" coveredmethods="6"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="11" count="10" type="stmt"/>
+        <line num="12" count="10" type="stmt"/>
+        <line num="14" count="10" type="stmt"/>
+        <line num="15" count="10" type="stmt"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="19" count="10" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
+        <line num="21" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="24" count="3" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+        <line num="26" count="3" type="stmt"/>
+        <line num="27" count="3" type="stmt"/>
+        <line num="30" count="2" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="36" count="3" type="stmt"/>
+        <line num="39" count="4" type="stmt"/>
+        <line num="42" count="10" type="stmt"/>
+        <line num="43" count="2" type="stmt"/>
+        <line num="51" count="10" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="55" count="10" type="stmt"/>
+        <line num="80" count="2" type="cond" truecount="1" falsecount="1"/>
+      </file>
+    </package>
+    <package name="src.features.main-page.pokemon-list-card">
+      <metrics statements="37" coveredstatements="33" conditionals="24" coveredconditionals="21" methods="11" coveredmethods="8"/>
+      <file name="pokemon-list-card.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/features/main-page/pokemon-list-card/pokemon-list-card.tsx">
+        <metrics statements="37" coveredstatements="33" conditionals="24" coveredconditionals="21" methods="11" coveredmethods="8"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="26" count="10" type="stmt"/>
+        <line num="27" count="10" type="stmt"/>
+        <line num="28" count="10" type="stmt"/>
+        <line num="30" count="10" type="stmt"/>
+        <line num="31" count="10" type="stmt"/>
+        <line num="32" count="10" type="stmt"/>
+        <line num="33" count="10" type="stmt"/>
+        <line num="34" count="10" type="stmt"/>
+        <line num="36" count="10" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="40" count="10" type="stmt"/>
+        <line num="41" count="5" type="stmt"/>
+        <line num="42" count="5" type="stmt"/>
+        <line num="43" count="4" type="stmt"/>
+        <line num="45" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="47" count="5" type="stmt"/>
+        <line num="51" count="10" type="stmt"/>
+        <line num="52" count="5" type="stmt"/>
+        <line num="53" count="5" type="stmt"/>
+        <line num="55" count="5" type="stmt"/>
+        <line num="58" count="10" type="stmt"/>
+        <line num="59" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="65" count="10" type="stmt"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="69" count="10" type="stmt"/>
+        <line num="70" count="5" type="stmt"/>
+        <line num="78" count="10" type="stmt"/>
+        <line num="79" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="82" count="10" type="cond" truecount="4" falsecount="0"/>
+        <line num="83" count="4" type="stmt"/>
+        <line num="85" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="89" count="10" type="stmt"/>
+        <line num="97" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.features.main-page.result-list">
+      <metrics statements="7" coveredstatements="7" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
+      <file name="result-list.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/features/main-page/result-list/result-list.tsx">
+        <metrics statements="7" coveredstatements="7" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="18" count="2" type="cond" truecount="4" falsecount="0"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.features.main-page.result-list-pagination">
+      <metrics statements="14" coveredstatements="14" conditionals="22" coveredconditionals="17" methods="5" coveredmethods="5"/>
+      <file name="result-list-pagination.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/features/main-page/result-list-pagination/result-list-pagination.tsx">
+        <metrics statements="14" coveredstatements="14" conditionals="22" coveredconditionals="17" methods="5" coveredmethods="5"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="18" count="6" type="stmt"/>
+        <line num="19" count="6" type="stmt"/>
+        <line num="20" count="18" type="stmt"/>
+        <line num="24" count="6" type="stmt"/>
+        <line num="26" count="6" type="stmt"/>
+        <line num="27" count="2" type="cond" truecount="4" falsecount="0"/>
+        <line num="30" count="6" type="stmt"/>
+        <line num="31" count="2" type="cond" truecount="4" falsecount="0"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="36" count="6" type="stmt"/>
+        <line num="37" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="44" count="6" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.features.main-page.search-field">
+      <metrics statements="12" coveredstatements="12" conditionals="8" coveredconditionals="6" methods="3" coveredmethods="3"/>
+      <file name="search-field.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/features/main-page/search-field/search-field.tsx">
+        <metrics statements="12" coveredstatements="12" conditionals="8" coveredconditionals="6" methods="3" coveredmethods="3"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="22" type="stmt"/>
+        <line num="11" count="22" type="cond" truecount="2" falsecount="0"/>
+        <line num="12" count="22" type="stmt"/>
+        <line num="14" count="22" type="stmt"/>
+        <line num="15" count="18" type="stmt"/>
+        <line num="18" count="22" type="stmt"/>
+        <line num="19" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="27" count="22" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.features.router">
+      <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="router.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/features/router/router.tsx">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="8" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.pages.about-page">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="about-page.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/pages/about-page/about-page.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.pages.error-page">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="error-page.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/pages/error-page/error-page.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.pages.main-page">
+      <metrics statements="52" coveredstatements="49" conditionals="35" coveredconditionals="28" methods="9" coveredmethods="9"/>
+      <file name="main-page.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/pages/main-page/main-page.tsx">
+        <metrics statements="52" coveredstatements="49" conditionals="35" coveredconditionals="28" methods="9" coveredmethods="9"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="43" type="stmt"/>
+        <line num="17" count="43" type="stmt"/>
+        <line num="18" count="43" type="stmt"/>
+        <line num="19" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="43" type="stmt"/>
+        <line num="22" count="43" type="stmt"/>
+        <line num="23" count="43" type="stmt"/>
+        <line num="24" count="43" type="stmt"/>
+        <line num="25" count="43" type="stmt"/>
+        <line num="26" count="43" type="stmt"/>
+        <line num="28" count="43" type="stmt"/>
+        <line num="29" count="9" type="stmt"/>
+        <line num="30" count="9" type="stmt"/>
+        <line num="31" count="9" type="stmt"/>
+        <line num="32" count="9" type="stmt"/>
+        <line num="33" count="8" type="stmt"/>
+        <line num="35" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="39" count="9" type="stmt"/>
+        <line num="43" count="43" type="stmt"/>
+        <line num="45" count="5" type="stmt"/>
+        <line num="47" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="51" count="5" type="stmt"/>
+        <line num="57" count="5" type="stmt"/>
+        <line num="62" count="43" type="stmt"/>
+        <line num="63" count="12" type="stmt"/>
+        <line num="64" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="65" count="4" type="stmt"/>
+        <line num="67" count="8" type="stmt"/>
+        <line num="70" count="12" type="stmt"/>
+        <line num="73" count="43" type="stmt"/>
+        <line num="74" count="2" type="stmt"/>
+        <line num="75" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="76" count="2" type="stmt"/>
+        <line num="77" count="2" type="stmt"/>
+        <line num="78" count="2" type="stmt"/>
+        <line num="79" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="80" count="1" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="87" count="43" type="stmt"/>
+        <line num="88" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="89" count="1" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="95" count="43" type="stmt"/>
+        <line num="96" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="103" count="43" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.components.button">
+      <metrics statements="6" coveredstatements="6" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
+      <file name="button.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/components/button/button.tsx">
+        <metrics statements="6" coveredstatements="6" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="19" count="51" type="stmt"/>
+        <line num="20" count="51" type="stmt"/>
+        <line num="21" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="8" type="stmt"/>
+        <line num="25" count="51" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.components.column-layout">
+      <metrics statements="2" coveredstatements="2" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+      <file name="column-layout.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/components/column-layout/column-layout.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.components.error-boundary">
+      <metrics statements="6" coveredstatements="6" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
+      <file name="error-boundary.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/components/error-boundary/error-boundary.tsx">
+        <metrics statements="6" coveredstatements="6" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
+        <line num="16" count="9" type="stmt"/>
+        <line num="21" count="8" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="33" count="17" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="9" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.components.flayout">
+      <metrics statements="32" coveredstatements="30" conditionals="18" coveredconditionals="10" methods="4" coveredmethods="4"/>
+      <file name="flayout.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/components/flayout/flayout.tsx">
+        <metrics statements="32" coveredstatements="30" conditionals="18" coveredconditionals="10" methods="4" coveredmethods="4"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="11" count="8" type="stmt"/>
+        <line num="12" count="8" type="stmt"/>
+        <line num="13" count="8" type="stmt"/>
+        <line num="15" count="8" type="stmt"/>
+        <line num="17" count="8" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="21" count="8" type="stmt"/>
+        <line num="22" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="31" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="32" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="53" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="54" count="4" type="stmt"/>
+        <line num="57" count="4" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.components.footer">
+      <metrics statements="3" coveredstatements="3" conditionals="3" coveredconditionals="2" methods="1" coveredmethods="1"/>
+      <file name="footer.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/components/footer/footer.tsx">
+        <metrics statements="3" coveredstatements="3" conditionals="3" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="9" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.components.header">
+      <metrics statements="11" coveredstatements="11" conditionals="14" coveredconditionals="8" methods="5" coveredmethods="5"/>
+      <file name="header.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/components/header/header.tsx">
+        <metrics statements="11" coveredstatements="11" conditionals="14" coveredconditionals="8" methods="5" coveredmethods="5"/>
+        <line num="9" count="2" type="stmt"/>
+        <line num="10" count="8" type="stmt"/>
+        <line num="11" count="8" type="stmt"/>
+        <line num="12" count="8" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="15" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="19" count="5" type="stmt"/>
+        <line num="30" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="38" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="46" count="5" type="cond" truecount="1" falsecount="1"/>
+      </file>
+    </package>
+    <package name="src.shared.components.select">
+      <metrics statements="7" coveredstatements="7" conditionals="5" coveredconditionals="4" methods="3" coveredmethods="3"/>
+      <file name="select.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/components/select/select.tsx">
+        <metrics statements="7" coveredstatements="7" conditionals="5" coveredconditionals="4" methods="3" coveredmethods="3"/>
+        <line num="19" count="2" type="stmt"/>
+        <line num="26" count="9" type="stmt"/>
+        <line num="27" count="9" type="stmt"/>
+        <line num="28" count="9" type="stmt"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="31" count="9" type="stmt"/>
+        <line num="41" count="27" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.components.text-input">
+      <metrics statements="5" coveredstatements="5" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
+      <file name="text-input.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/components/text-input/text-input.tsx">
+        <metrics statements="5" coveredstatements="5" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="21" count="27" type="stmt"/>
+        <line num="22" count="27" type="stmt"/>
+        <line num="23" count="26" type="stmt"/>
+        <line num="25" count="27" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.context">
+      <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="3"/>
+      <file name="appThemeContext.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/context/appThemeContext.tsx">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="8" count="12" type="stmt"/>
+      </file>
+      <file name="appThemeContextProvider.tsx" path="/home/artem/Desktop/ya/rs-react/react/src/shared/context/appThemeContextProvider.tsx">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="9" count="3" type="stmt"/>
+        <line num="11" count="3" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="15" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.helpers">
+      <metrics statements="6" coveredstatements="6" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+      <file name="capitalizeStr.ts" path="/home/artem/Desktop/ya/rs-react/react/src/shared/helpers/capitalizeStr.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="2" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+      </file>
+      <file name="generateRandomId.ts" path="/home/artem/Desktop/ya/rs-react/react/src/shared/helpers/generateRandomId.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.hooks">
+      <metrics statements="23" coveredstatements="22" conditionals="8" coveredconditionals="8" methods="9" coveredmethods="8"/>
+      <file name="use-local-storage.ts" path="/home/artem/Desktop/ya/rs-react/react/src/shared/hooks/use-local-storage.ts">
+        <metrics statements="9" coveredstatements="8" conditionals="3" coveredconditionals="3" methods="4" coveredmethods="3"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="43" type="stmt"/>
+        <line num="6" count="6" type="stmt"/>
+        <line num="8" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="13" count="43" type="stmt"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="20" count="43" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="24" count="43" type="stmt"/>
+      </file>
+      <file name="use-pagination.ts" path="/home/artem/Desktop/ya/rs-react/react/src/shared/hooks/use-pagination.ts">
+        <metrics statements="14" coveredstatements="14" conditionals="5" coveredconditionals="5" methods="5" coveredmethods="5"/>
+        <line num="4" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="5" count="43" type="stmt"/>
+        <line num="6" count="43" type="stmt"/>
+        <line num="8" count="43" type="stmt"/>
+        <line num="9" count="17" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="8" type="stmt"/>
+        <line num="12" count="8" type="stmt"/>
+        <line num="13" count="8" type="stmt"/>
+        <line num="20" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="43" type="stmt"/>
+        <line num="23" count="4" type="stmt"/>
+        <line num="24" count="4" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="29" count="43" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shared.services.api">
+      <metrics statements="26" coveredstatements="26" conditionals="16" coveredconditionals="16" methods="5" coveredmethods="5"/>
+      <file name="api-service.ts" path="/home/artem/Desktop/ya/rs-react/react/src/shared/services/api/api-service.ts">
+        <metrics statements="26" coveredstatements="26" conditionals="16" coveredconditionals="16" methods="5" coveredmethods="5"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="8" count="6" type="stmt"/>
+        <line num="11" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="14" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="17" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="20" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="23" count="2" type="stmt"/>
+        <line num="27" count="5" type="stmt"/>
+        <line num="28" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="31" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="34" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="37" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="49" count="41" type="stmt"/>
+        <line num="53" count="32" type="stmt"/>
+        <line num="57" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.store">
+      <metrics statements="16" coveredstatements="16" conditionals="2" coveredconditionals="2" methods="5" coveredmethods="5"/>
+      <file name="hooks.ts" path="/home/artem/Desktop/ya/rs-react/react/src/store/hooks.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+      </file>
+      <file name="selectedPokemonSlice.ts" path="/home/artem/Desktop/ya/rs-react/react/src/store/selectedPokemonSlice.ts">
+        <metrics statements="13" coveredstatements="13" conditionals="2" coveredconditionals="2" methods="5" coveredmethods="5"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="25" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="27" count="2" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="40" count="5" type="stmt"/>
+        <line num="42" count="5" type="stmt"/>
+        <line num="43" count="24" type="stmt"/>
+      </file>
+      <file name="store.ts" path="/home/artem/Desktop/ya/rs-react/react/src/store/store.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="4" count="3" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
