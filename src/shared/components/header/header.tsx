@@ -3,9 +3,12 @@ import pokedexImage from '../../../assets/Pokédex_logo.png';
 import './header.css';
 import { Button } from '../button/button';
 import { NavLink } from 'react-router-dom';
+import { useContext } from 'react';
+import { DarkThemeContext } from '../../context/appThemeContext';
 
 export const Header = () => {
   const [error, setError] = useState(false);
+  const { isDarkTheme, toggleTheme } = useContext(DarkThemeContext);
   const handleTestErrorClick = (): void => {
     setError(true);
   };
@@ -14,7 +17,9 @@ export const Header = () => {
   }
 
   return (
-    <div className="header_wrapper">
+    <div
+      className={`header_wrapper ${isDarkTheme ? 'header_wrapper__dark' : ''}`}
+    >
       <div className="header_nav">
         <img className="header_logo" src={pokedexImage} alt="pokedex" />
         <nav>
@@ -45,7 +50,18 @@ export const Header = () => {
           </NavLink>
         </nav>
       </div>
-      <Button text="Test error" onClick={handleTestErrorClick} />
+      <div className="header_actions">
+        <Button
+          className="header_button"
+          text="Test error"
+          onClick={handleTestErrorClick}
+        />
+        <Button
+          className={`header_button ${isDarkTheme ? 'theme_button__dark' : ''}`}
+          text={isDarkTheme ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          onClick={toggleTheme}
+        />
+      </div>
     </div>
   );
 };

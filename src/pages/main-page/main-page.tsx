@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { usePagination } from '../../shared/hooks/use-pagination';
 import type { FilterProps, PokemonListResponse } from '../../shared/models';
 import { SearchField } from '../../features/main-page/search-field/search-field';
@@ -10,6 +10,7 @@ import { useLocalStorage } from '../../shared/hooks/use-local-storage';
 import pokeballImage from '../../assets/pokeball.png';
 import './main-page.css';
 import { Outlet } from 'react-router-dom';
+import { DarkThemeContext } from '../../shared/context/appThemeContext';
 
 export const MainPage = ({ filter }: FilterProps) => {
   const defaultErrorMessage = 'Troubles with loading data';
@@ -22,6 +23,7 @@ export const MainPage = ({ filter }: FilterProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [limit, setLimit] = useState<number>(apiService.limit);
+  const { isDarkTheme } = useContext(DarkThemeContext);
 
   const getList = useCallback(async () => {
     setLoading(true);
@@ -109,7 +111,9 @@ export const MainPage = ({ filter }: FilterProps) => {
           />
         </div>
       ) : null}
-      <div className="main_page_left_column">
+      <div
+        className={`main_page_left_column ${isDarkTheme ? 'main_page_left_column__dark' : ''}`}
+      >
         <SearchField filter={currentFilter} onFilterChange={handleNewFilter} />
         <ResultList list={data?.results || []} errorMsg={error || ''} />
 

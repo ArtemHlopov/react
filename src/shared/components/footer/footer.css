@@ -5,3 +5,8 @@
   bottom: 0;
   width: 100%;
 }
+
+.footer_wrpper__dark {
+  background-color: var(--dark-red);
+  color: var(--white);
+}

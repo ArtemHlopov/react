@@ -3,6 +3,8 @@ import { Button } from '../../../shared/components/button/button';
 import { apiService } from '../../../shared/services/api/api-service';
 import './result-list-pagination.css';
 import { Select } from '../../../shared/components/select/select';
+import { DarkThemeContext } from '../../../shared/context/appThemeContext';
+import { useContext } from 'react';
 
 export const ResultListPagination = ({
   previous,
@@ -19,6 +21,7 @@ export const ResultListPagination = ({
     title: `${opt}`,
     value: opt,
   }));
+  const { isDarkTheme } = useContext(DarkThemeContext);
 
   const handlePreviousClick = (): void => {
     if (previous && onOffsetChange) onOffsetChange();
@@ -40,7 +43,7 @@ export const ResultListPagination = ({
 
   return (
     <div className="pagination_wrapper">
-      <div className="pagination">
+      <div className={`pagination ${isDarkTheme ? 'pagination__dark' : ''}`}>
         <span className="pagination_info">Total: {total}</span>
         <div className="pagination_pages_changer">
           <Button

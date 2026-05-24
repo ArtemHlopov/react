@@ -9,3 +9,7 @@ option {
 select {
   background-color: var(--light-red);
 }
+
+.select__dark {
+  background-color: var(--dark-red);
+}

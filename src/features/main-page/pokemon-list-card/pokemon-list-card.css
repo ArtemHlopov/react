@@ -37,3 +37,16 @@ h3 {
     padding: 0.15rem 1rem;
   }
 }
+
+.pokemon_card__dark {
+  .image_wrapper {
+    border-left: var(--card-border-dark);
+    border-right: var(--card-border-dark);
+  }
+
+  h3,
+  p:last-child {
+    border: var(--card-border-dark);
+    background-color: var(--dark-red);
+  }
+}

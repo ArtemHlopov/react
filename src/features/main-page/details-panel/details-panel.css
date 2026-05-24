@@ -8,6 +8,9 @@
   background-color: var(--light-red);
   color: var(--white);
 }
+.details_panel__dark {
+  background-color: var(--dark-red);
+}
 
 h2 {
   text-transform: uppercase;

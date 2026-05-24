@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type {
   CustomComponentProps,
   PokemonListResponseResult,
@@ -9,6 +9,7 @@ import pokeballCardLoader from '../../../assets/pokeball.png';
 import './pokemon-list-card.css';
 import { capitalizeStr } from '../../../shared/helpers/capitalizeStr';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { DarkThemeContext } from '../../../shared/context/appThemeContext';
 
 interface PokemonCardProps extends CustomComponentProps {
   pokemonBaseInfo: PokemonListResponseResult;
@@ -23,6 +24,7 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { isDarkTheme } = useContext(DarkThemeContext);
 
   const fetchPokemonDetails = useCallback(async (): Promise<void> => {
     try {
@@ -70,7 +72,10 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
     : unknownName;
 
   return (
-    <div className="pokemon_card" onClick={handleCardClick}>
+    <div
+      className={`pokemon_card ${isDarkTheme ? 'pokemon_card__dark' : ''}`}
+      onClick={handleCardClick}
+    >
       <h3>{pokemonName}</h3>
       <div className="image_wrapper">
         {' '}

@@ -7,9 +7,12 @@
 :root {
   --white: #ffffff;
   --light-red: #ff244e;
+  --dark-red: #96122d;
   --light-grey: #eff0f1;
+  --dark-grey: #727070;
 
   --card-border: 1px solid var(--light-red);
+  --card-border-dark: 1px solid var(--dark-red);
 
   --radius-rounded: 30px;
 }

@@ -26,19 +26,28 @@
       align-items: center;
       gap: 1rem;
       padding: 1rem;
+    }
 
-      button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: var(--white);
-        background: var(--light-red);
-        padding: 0.5rem 1rem;
-        border-radius: var(--radius-rounded);
-        border: none;
-        font-size: large;
-        cursor: pointer;
-      }
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--white);
+      background: var(--light-red);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-rounded);
+      border: none;
+      font-size: large;
+      cursor: pointer;
+    }
+  }
+
+  .pagination__dark {
+    background-color: var(--dark-grey);
+    color: var(--white);
+
+    button {
+      background-color: var(--dark-red);
     }
   }
 }

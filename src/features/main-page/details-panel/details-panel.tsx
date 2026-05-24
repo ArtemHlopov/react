@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import type { PokemonDetails } from '../../../shared/models';
 import { apiService } from '../../../shared/services/api/api-service';
 import pokeballImage from '../../../assets/pokeball.png';
 import './details-panel.css';
+import { DarkThemeContext } from '../../../shared/context/appThemeContext';
 
 export const DetailsPanel = () => {
   const { name } = useParams();
@@ -13,6 +14,7 @@ export const DetailsPanel = () => {
   const [details, setDetails] = useState<PokemonDetails | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { isDarkTheme } = useContext(DarkThemeContext);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -51,7 +53,9 @@ export const DetailsPanel = () => {
   };
 
   return (
-    <div className="details_panel">
+    <div
+      className={`details_panel ${isDarkTheme ? 'details_panel__dark' : ''}  `}
+    >
       <button className="details_button" onClick={handleClose}>
         X
       </button>
