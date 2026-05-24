@@ -1,0 +1,32 @@
+.details_panel {
+  flex: 1 1;
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 20dvw;
+  padding: 100px 1rem;
+  background-color: var(--light-red);
+  color: var(--white);
+}
+.details_panel__dark {
+  background-color: var(--dark-red);
+}
+
+h2 {
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.details_button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 2rem;
+  align-self: flex-end;
+  transition: transform 0.5s;
+}
+
+.details_button:hover {
+  transform: scale(1.3);
+}
