@@ -4,11 +4,15 @@ import { RouterProvider } from 'react-router-dom';
 import './index.css';
 import { router } from './features/router/router';
 import { DarkThemeProvider } from './shared/context/appThemeContextProvider';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <DarkThemeProvider>
-      <RouterProvider router={router} />
-    </DarkThemeProvider>
+    <Provider store={store}>
+      <DarkThemeProvider>
+        <RouterProvider router={router} />
+      </DarkThemeProvider>
+    </Provider>
   </StrictMode>
 );
