@@ -1,15 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { PokemonListCard } from './pokemon-list-card';
-import { Provider } from 'react-redux';
-import { store } from '../../../store/store';
-import { apiService } from '../../../shared/services/api/api-service';
 import type {
   PokemonDetails,
   PokemonListResponseResult,
 } from '../../../shared/models';
+import { renderWithProviders } from '../../../test/test-utils';
 
 const mockPokemonBaseInfo: PokemonListResponseResult = {
   name: 'pikachu',
@@ -18,14 +16,12 @@ const mockPokemonBaseInfo: PokemonListResponseResult = {
 
 const createDeferred = <T,>() => {
   let resolve!: (value: T) => void;
-  let reject!: (reason?: unknown) => void;
 
-  const promise = new Promise<T>((res, rej) => {
+  const promise = new Promise<T>((res) => {
     resolve = res;
-    reject = rej;
   });
 
-  return { promise, resolve, reject };
+  return { promise, resolve };
 };
 
 const createPokemonDetails = (
@@ -61,6 +57,15 @@ const createPokemonDetails = (
   ...overrides,
 });
 
+const jsonResponse = (body: unknown, status = 200): Response =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+const getRequestUrl = (request: RequestInfo | URL): string =>
+  request instanceof Request ? request.url : request.toString();
+
 const LocationDisplay = () => {
   const location = useLocation();
 
@@ -73,31 +78,29 @@ const LocationDisplay = () => {
 };
 
 const renderCard = (initialEntry = '/?page=2') =>
-  render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[initialEntry]}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <PokemonListCard pokemonBaseInfo={mockPokemonBaseInfo} />
-                <LocationDisplay />
-              </>
-            }
-          />
-          <Route
-            path="/details/:name"
-            element={
-              <>
-                <div>Pokemon details route</div>
-                <LocationDisplay />
-              </>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    </Provider>
+  renderWithProviders(
+    <MemoryRouter initialEntries={[initialEntry]}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <PokemonListCard pokemonBaseInfo={mockPokemonBaseInfo} />
+              <LocationDisplay />
+            </>
+          }
+        />
+        <Route
+          path="/details/:name"
+          element={
+            <>
+              <div>Pokemon details route</div>
+              <LocationDisplay />
+            </>
+          }
+        />
+      </Routes>
+    </MemoryRouter>
   );
 
 describe('PokemonListCard', () => {
@@ -106,10 +109,10 @@ describe('PokemonListCard', () => {
   });
 
   it('shows the loading state first and then renders fetched details', async () => {
-    const deferred = createDeferred<PokemonDetails>();
-    vi.spyOn(apiService, 'getPokemonDetails').mockReturnValueOnce(
-      deferred.promise
-    );
+    const deferred = createDeferred<Response>();
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockReturnValueOnce(deferred.promise);
 
     renderCard();
 
@@ -117,11 +120,14 @@ describe('PokemonListCard', () => {
       screen.getByRole('heading', { name: 'Unknown pokemon' })
     ).toBeInTheDocument();
     expect(screen.getByText('Loading...')).toBeInTheDocument();
-    expect(apiService.getPokemonDetails).toHaveBeenCalledWith(
-      mockPokemonBaseInfo.url
-    );
 
-    deferred.resolve(createPokemonDetails());
+    await waitFor(() => {
+      expect(getRequestUrl(fetchSpy.mock.calls[0][0])).toBe(
+        'https://pokeapi.co/api/v2/pokemon/pikachu'
+      );
+    });
+
+    deferred.resolve(jsonResponse(createPokemonDetails()));
 
     expect(
       await screen.findByRole('heading', { name: 'Pikachu' })
@@ -164,7 +170,7 @@ describe('PokemonListCard', () => {
       expectedSrc: 'https://img.test/dream-world.svg',
     },
   ])('uses $title', async ({ details, expectedSrc }) => {
-    vi.spyOn(apiService, 'getPokemonDetails').mockResolvedValueOnce(details);
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(jsonResponse(details));
 
     renderCard();
 
@@ -175,14 +181,16 @@ describe('PokemonListCard', () => {
   });
 
   it('shows an error message when fetching details fails', async () => {
-    vi.spyOn(apiService, 'getPokemonDetails').mockRejectedValueOnce(
-      new Error('Pokemon not found')
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      jsonResponse({ detail: 'Not found' }, 404)
     );
 
     renderCard();
 
     expect(
-      await screen.findByText('Error: Pokemon not found')
+      await screen.findByText(
+        'Error: Pokemon not found. Check the name and try again.'
+      )
     ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'Unknown pokemon' })
@@ -192,8 +200,8 @@ describe('PokemonListCard', () => {
   it('navigates to the details route and preserves search params after loading', async () => {
     const user = userEvent.setup();
 
-    vi.spyOn(apiService, 'getPokemonDetails').mockResolvedValueOnce(
-      createPokemonDetails()
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      jsonResponse(createPokemonDetails())
     );
 
     renderCard('/?page=3');

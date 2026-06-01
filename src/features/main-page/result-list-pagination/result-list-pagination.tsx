@@ -1,6 +1,6 @@
 import type { PaginationProps } from '../../../shared/models';
 import { Button } from '../../../shared/components/button/button';
-import { apiService } from '../../../shared/services/api/api-service';
+import { paginationService } from '../../../shared/services/api/api-service';
 import './result-list-pagination.css';
 import { Select } from '../../../shared/components/select/select';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
@@ -53,7 +53,8 @@ export const ResultListPagination = ({
             disabled={disabled || currentPage <= 1}
           />
           {currentPage} /{' '}
-          {Math.ceil(Number(total) / apiService.limit) || defaultPageNumber}
+          {Math.ceil(Number(total) / paginationService.limit) ||
+            defaultPageNumber}
           <Button
             id="next-page-btn"
             onClick={handleNextClick}
@@ -61,7 +62,7 @@ export const ResultListPagination = ({
             disabled={
               disabled ||
               currentPage >=
-                (Math.ceil(Number(total) / apiService.limit) ||
+                (Math.ceil(Number(total) / paginationService.limit) ||
                   defaultPageNumber)
             }
           />
@@ -70,7 +71,7 @@ export const ResultListPagination = ({
           disabled={disabled}
           onSelectChange={handleSelectChange}
           options={selectOptions}
-          value={apiService.limit}
+          value={paginationService.limit}
         ></Select>
       </div>
     </div>

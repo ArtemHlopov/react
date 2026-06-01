@@ -1,49 +1,51 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { PokemonListResponse, PokemonDetails } from '../../models';
 
-class ApiService {
+const POKEMON_API_BASE_URL = 'https://pokeapi.co/api/v2';
+const DEFAULT_CACHE_TTL_SECONDS = 300;
+
+const configuredCacheTtl = Number(
+  import.meta.env.VITE_RTK_QUERY_CACHE_TTL_SECONDS
+);
+const cacheTtl = Number.isFinite(configuredCacheTtl)
+  ? configuredCacheTtl
+  : DEFAULT_CACHE_TTL_SECONDS;
+
+export const getPokemonDetailsUrl = (name: string): string =>
+  `${POKEMON_API_BASE_URL}/pokemon/${name.toLowerCase()}`;
+
+export const pokemonApi = createApi({
+  reducerPath: 'pokemonApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: POKEMON_API_BASE_URL,
+  }),
+  keepUnusedDataFor: cacheTtl,
+  tagTypes: ['PokemonList', 'PokemonDetails'],
+  endpoints: (builder) => ({
+    getPokemonList: builder.query<
+      PokemonListResponse,
+      { limit: number; offset: number }
+    >({
+      query: ({ limit, offset }) => ({
+        url: 'pokemon',
+        params: { limit, offset },
+      }),
+      providesTags: ['PokemonList'],
+    }),
+    getPokemonDetails: builder.query<PokemonDetails, string>({
+      query: (name) => `pokemon/${name.toLowerCase()}`,
+      providesTags: (_result, _error, name) => [
+        { type: 'PokemonDetails', id: name.toLowerCase() },
+      ],
+    }),
+  }),
+});
+
+export const { useGetPokemonListQuery, useGetPokemonDetailsQuery } = pokemonApi;
+
+class PaginationService {
   offset: number = 0;
   limit: number = 10;
-
-  async getItemsList(): Promise<PokemonListResponse> {
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/pokemon?limit=${this.limit}&offset=${this.offset}`
-    );
-    if (response.status === 404) {
-      throw new Error('Pokemon list not found');
-    }
-    if (response.status === 400) {
-      throw new Error('Bad pokemon list request');
-    }
-    if (response.status === 500) {
-      throw new Error('Server error, try again later');
-    }
-    if (!response.ok) {
-      throw new Error('Unknown error');
-    }
-    return await response.json();
-  }
-
-  async getPokemonDetails(url: string): Promise<PokemonDetails> {
-    const response = await fetch(url);
-    if (response.status === 404) {
-      throw new Error('Pokemon not found');
-    }
-    if (response.status === 400) {
-      throw new Error('Bad request');
-    }
-    if (response.status === 500) {
-      throw new Error('Server error, try again later');
-    }
-    if (!response.ok) {
-      throw new Error('Unknown error');
-    }
-
-    return await response.json();
-  }
-
-  getPokemonLink(name: string): string {
-    return `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`;
-  }
 
   setOffsetValue(value: number) {
     this.offset = value;
@@ -54,4 +56,4 @@ class ApiService {
   }
 }
 
-export const apiService = new ApiService();
+export const paginationService = new PaginationService();

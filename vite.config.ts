@@ -20,6 +20,7 @@ export default defineConfig({
       exclude: [
         'src/**/*.test.{js,jsx,ts,tsx}',
         'src/**/*.spec.{js,jsx,ts,tsx}',
+        'src/test/**/*.{js,jsx,ts,tsx}',
         'src/test/setup.{js,jsx,ts,tsx}',
         'src/**/models.{js,jsx,ts,tsx}',
         'src/**/*.models.{js,jsx,ts,tsx}',

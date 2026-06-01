@@ -2,12 +2,12 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ResultListPagination } from './result-list-pagination';
-import { apiService } from '../../../shared/services/api/api-service';
+import { paginationService } from '../../../shared/services/api/api-service';
 
 describe('ResultListPagination', () => {
   beforeEach(() => {
-    apiService.setOffsetValue(20);
-    apiService.setLimitValue(10);
+    paginationService.setOffsetValue(20);
+    paginationService.setLimitValue(10);
   });
 
   afterEach(() => {

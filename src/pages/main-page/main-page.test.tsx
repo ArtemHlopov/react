@@ -1,14 +1,15 @@
 import { MemoryRouter } from 'react-router-dom';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MainPage } from './main-page';
 import { LS_FILTER_KEY } from '../../shared/constants';
-import { apiService } from '../../shared/services/api/api-service';
-import type { PokemonListResponse } from '../../shared/models';
+import { paginationService } from '../../shared/services/api/api-service';
+import type { PokemonDetails, PokemonListResponse } from '../../shared/models';
+import { renderWithProviders } from '../../test/test-utils';
 
 const mockListResponse: PokemonListResponse = {
-  count: 2,
+  count: 30,
   next: 'https://pokeapi.co/api/v2/pokemon?limit=10&offset=10',
   previous: null,
   results: [
@@ -18,21 +19,36 @@ const mockListResponse: PokemonListResponse = {
 };
 
 const nextPageResponse: PokemonListResponse = {
-  count: 2,
+  count: 30,
   next: null,
   previous: 'https://pokeapi.co/api/v2/pokemon?limit=10&offset=0',
   results: [{ name: 'venusaur', url: 'https://pokeapi.co/api/v2/pokemon/3/' }],
 };
 
-const createDeferred = <T,>() => {
-  let resolve!: (value: T) => void;
-  let reject!: (reason?: unknown) => void;
-  const promise = new Promise<T>((res, rej) => {
-    resolve = res;
-    reject = rej;
+const mockPokemonDetails: PokemonDetails = {
+  id: 1,
+  name: 'bulbasaur',
+  height: 7,
+  weight: 69,
+};
+
+const jsonResponse = (body: unknown, status = 200): Response =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
   });
 
-  return { promise, resolve, reject };
+const getRequestUrl = (request: RequestInfo | URL): string =>
+  request instanceof Request ? request.url : request.toString();
+
+const createDeferred = <T,>() => {
+  let resolve!: (value: T) => void;
+
+  const promise = new Promise<T>((res) => {
+    resolve = res;
+  });
+
+  return { promise, resolve };
 };
 
 vi.mock('../../features/main-page/search-field/search-field', () => ({
@@ -109,8 +125,8 @@ vi.mock(
 describe('MainPage', () => {
   beforeEach(() => {
     localStorage.clear();
-    apiService.setOffsetValue(0);
-    apiService.setLimitValue(10);
+    paginationService.setOffsetValue(0);
+    paginationService.setLimitValue(10);
   });
 
   afterEach(() => {
@@ -118,10 +134,11 @@ describe('MainPage', () => {
   });
 
   it('loads the pokemon list on mount and shows a loading indicator while waiting', async () => {
-    const deferred = createDeferred<PokemonListResponse>();
-    vi.spyOn(apiService, 'getItemsList').mockReturnValueOnce(deferred.promise);
+    const deferred = createDeferred<Response>();
 
-    render(
+    vi.spyOn(globalThis, 'fetch').mockReturnValueOnce(deferred.promise);
+
+    renderWithProviders(
       <MemoryRouter>
         <MainPage filter="" />
       </MemoryRouter>
@@ -131,14 +148,11 @@ describe('MainPage', () => {
       await screen.findByRole('img', { name: 'Loading pokemon' })
     ).toBeInTheDocument();
 
-    await act(async () => {
-      deferred.resolve(mockListResponse);
-      await deferred.promise;
-    });
+    deferred.resolve(jsonResponse(mockListResponse));
 
     expect(await screen.findByText('bulbasaur')).toBeInTheDocument();
     expect(screen.getByText('ivysaur')).toBeInTheDocument();
-    expect(screen.getByText('Total items: 2')).toBeInTheDocument();
+    expect(screen.getByText('Total items: 30')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(
@@ -147,67 +161,73 @@ describe('MainPage', () => {
     });
   });
 
-  it('uses the initial filter to build a single pokemon result instead of loading the list', async () => {
-    const getItemsListSpy = vi.spyOn(apiService, 'getItemsList');
-    const getPokemonLinkSpy = vi
-      .spyOn(apiService, 'getPokemonLink')
-      .mockReturnValue('https://pokeapi.co/api/v2/pokemon/pikachu');
+  it('uses the initial filter to fetch a single pokemon result instead of loading the list', async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(
+        jsonResponse({ ...mockPokemonDetails, name: 'pikachu' })
+      );
 
-    render(
+    renderWithProviders(
       <MemoryRouter>
         <MainPage filter="Pikachu" />
       </MemoryRouter>
     );
 
-    expect(await screen.findByText('Pikachu')).toBeInTheDocument();
-    expect(getItemsListSpy).not.toHaveBeenCalled();
-    expect(getPokemonLinkSpy).toHaveBeenCalledWith('Pikachu');
+    expect(await screen.findByText('pikachu')).toBeInTheDocument();
+    expect(getRequestUrl(fetchSpy.mock.calls[0][0])).toBe(
+      'https://pokeapi.co/api/v2/pokemon/pikachu'
+    );
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(screen.getByText('Search filter: Pikachu')).toBeInTheDocument();
     expect(screen.getByText('Pagination disabled: true')).toBeInTheDocument();
   });
 
   it('stores a trimmed search term in localStorage and renders the searched pokemon', async () => {
     const user = userEvent.setup();
-    vi.spyOn(apiService, 'getItemsList').mockResolvedValueOnce(
-      mockListResponse
-    );
-    const getPokemonLinkSpy = vi
-      .spyOn(apiService, 'getPokemonLink')
-      .mockReturnValue('https://pokeapi.co/api/v2/pokemon/bulbasaur');
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse(mockListResponse))
+      .mockResolvedValueOnce(jsonResponse(mockPokemonDetails));
 
-    render(
+    renderWithProviders(
       <MemoryRouter>
         <MainPage filter="" />
       </MemoryRouter>
     );
 
-    expect(await screen.findByText('bulbasaur')).toBeInTheDocument();
+    expect(await screen.findByText('ivysaur')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Search bulbasaur' }));
 
     expect(localStorage.getItem(LS_FILTER_KEY)).toBe('bulbasaur');
-    expect(getPokemonLinkSpy).toHaveBeenCalledWith('bulbasaur');
     expect(
       await screen.findByText('Search filter: bulbasaur')
     ).toBeInTheDocument();
-    expect(screen.getByText('Pagination disabled: true')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Pagination disabled: true')
+    ).toBeInTheDocument();
+    expect(getRequestUrl(fetchSpy.mock.calls[1][0])).toBe(
+      'https://pokeapi.co/api/v2/pokemon/bulbasaur'
+    );
   });
 
   it('reloads the full list when the search term is cleared', async () => {
     const user = userEvent.setup();
-    const getItemsListSpy = vi
-      .spyOn(apiService, 'getItemsList')
-      .mockResolvedValueOnce(mockListResponse);
 
-    render(
+    vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(
+        jsonResponse({ ...mockPokemonDetails, name: 'pikachu' })
+      )
+      .mockResolvedValueOnce(jsonResponse(mockListResponse));
+
+    renderWithProviders(
       <MemoryRouter>
         <MainPage filter="pikachu" />
       </MemoryRouter>
     );
 
     expect(await screen.findByText('pikachu')).toBeInTheDocument();
-
-    getItemsListSpy.mockResolvedValueOnce(mockListResponse);
 
     await user.click(screen.getByRole('button', { name: 'Clear search' }));
 
@@ -216,50 +236,69 @@ describe('MainPage', () => {
     expect(screen.getByText('ivysaur')).toBeInTheDocument();
   });
 
-  it('shows the default error message when loading the list fails', async () => {
-    vi.spyOn(apiService, 'getItemsList').mockRejectedValueOnce(
-      new Error('Network issue')
+  it('shows a clear error message when loading the list fails', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      jsonResponse({ detail: 'Server error' }, 500)
     );
 
-    render(
+    renderWithProviders(
       <MemoryRouter>
         <MainPage filter="" />
       </MemoryRouter>
     );
 
     expect(
-      await screen.findByText('Troubles with loading data')
+      await screen.findByText('Server error. Try again later.')
+    ).toBeInTheDocument();
+  });
+
+  it('shows a clear error message when the searched pokemon fails to load', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      jsonResponse({ detail: 'Not found' }, 404)
+    );
+
+    renderWithProviders(
+      <MemoryRouter>
+        <MainPage filter="missingno" />
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByText('Pokemon not found. Check the name and try again.')
     ).toBeInTheDocument();
   });
 
   it('uses the saved filter from localStorage when the prop is empty', async () => {
-    const getItemsListSpy = vi.spyOn(apiService, 'getItemsList');
-    const getPokemonLinkSpy = vi
-      .spyOn(apiService, 'getPokemonLink')
-      .mockReturnValue('https://pokeapi.co/api/v2/pokemon/charizard');
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(
+        jsonResponse({ ...mockPokemonDetails, name: 'charizard' })
+      );
 
     localStorage.setItem(LS_FILTER_KEY, 'charizard');
 
-    render(
+    renderWithProviders(
       <MemoryRouter>
         <MainPage filter="" />
       </MemoryRouter>
     );
 
     expect(await screen.findByText('charizard')).toBeInTheDocument();
-    expect(getItemsListSpy).not.toHaveBeenCalled();
-    expect(getPokemonLinkSpy).toHaveBeenCalledWith('charizard');
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(getRequestUrl(fetchSpy.mock.calls[0][0])).toBe(
+      'https://pokeapi.co/api/v2/pokemon/charizard'
+    );
     expect(screen.getByText('Pagination disabled: true')).toBeInTheDocument();
   });
 
   it('changes the page and requests a fresh list when the next page is selected', async () => {
     const user = userEvent.setup();
-    vi.spyOn(apiService, 'getItemsList')
-      .mockResolvedValueOnce(mockListResponse)
-      .mockResolvedValueOnce(nextPageResponse);
-    const setOffsetValueSpy = vi.spyOn(apiService, 'setOffsetValue');
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse(mockListResponse))
+      .mockResolvedValueOnce(jsonResponse(nextPageResponse));
 
-    render(
+    renderWithProviders(
       <MemoryRouter>
         <MainPage filter="" />
       </MemoryRouter>
@@ -269,21 +308,20 @@ describe('MainPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Next page' }));
 
-    expect(setOffsetValueSpy).toHaveBeenCalledWith(10);
     expect(await screen.findByText('venusaur')).toBeInTheDocument();
+    expect(getRequestUrl(fetchSpy.mock.calls[1][0])).toBe(
+      'https://pokeapi.co/api/v2/pokemon?limit=10&offset=10'
+    );
   });
 
   it('updates the limit and reloads the list when a new page size is selected', async () => {
     const user = userEvent.setup();
-    apiService.setOffsetValue(30);
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse(mockListResponse))
+      .mockResolvedValueOnce(jsonResponse(mockListResponse));
 
-    vi.spyOn(apiService, 'getItemsList')
-      .mockResolvedValueOnce(mockListResponse)
-      .mockResolvedValueOnce(mockListResponse);
-    const setOffsetValueSpy = vi.spyOn(apiService, 'setOffsetValue');
-    const setLimitValueSpy = vi.spyOn(apiService, 'setLimitValue');
-
-    render(
+    renderWithProviders(
       <MemoryRouter>
         <MainPage filter="" />
       </MemoryRouter>
@@ -293,7 +331,9 @@ describe('MainPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Set limit 20' }));
 
-    expect(setOffsetValueSpy).toHaveBeenCalledWith(0);
-    expect(setLimitValueSpy).toHaveBeenCalledWith(20);
+    expect(paginationService.limit).toBe(20);
+    expect(getRequestUrl(fetchSpy.mock.calls[1][0])).toBe(
+      'https://pokeapi.co/api/v2/pokemon?limit=20&offset=0'
+    );
   });
 });

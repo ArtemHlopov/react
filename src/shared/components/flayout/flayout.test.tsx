@@ -5,8 +5,17 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import selectedPokemonsReducer from '../../../store/selectedPokemonSlice';
 import { DarkThemeContext } from '../../context/appThemeContext';
+import type { PokemonListResponseResult } from '../../models';
 
-const renderFlayoutWithStore = (preloadedState = { selectedPokemon: [] }) => {
+interface SelectedPokemonsTestState {
+  selectedPokemon: PokemonListResponseResult[];
+}
+
+const emptySelectedState: SelectedPokemonsTestState = { selectedPokemon: [] };
+
+const renderFlayoutWithStore = (
+  preloadedState: SelectedPokemonsTestState = emptySelectedState
+) => {
   const store = configureStore({
     reducer: {
       selectedPokemons: selectedPokemonsReducer,

@@ -1,15 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  MemoryRouter,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { DetailsPanel } from './details-panel';
-import { apiService } from '../../../shared/services/api/api-service';
 import type { PokemonDetails } from '../../../shared/models';
+import { renderWithProviders } from '../../../test/test-utils';
 
 const createDeferred = <T,>() => {
   let resolve!: (value: T) => void;
@@ -51,6 +46,15 @@ const mockPokemonDetails: PokemonDetails = {
   },
 };
 
+const jsonResponse = (body: unknown, status = 200): Response =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+const getRequestUrl = (request: RequestInfo | URL): string =>
+  request instanceof Request ? request.url : request.toString();
+
 const LocationDisplay = () => {
   const location = useLocation();
 
@@ -63,7 +67,7 @@ const LocationDisplay = () => {
 };
 
 const renderPanel = (initialEntry: string, path = '/details/:name') =>
-  render(
+  renderWithProviders(
     <MemoryRouter initialEntries={[initialEntry]}>
       <Routes>
         <Route
@@ -100,23 +104,23 @@ describe('DetailsPanel', () => {
   });
 
   it('shows a loading state and then renders pokemon details', async () => {
-    const deferred = createDeferred<PokemonDetails>();
-
-    vi.spyOn(apiService, 'getPokemonLink').mockReturnValue(
-      'https://pokeapi.co/api/v2/pokemon/pikachu'
-    );
-    vi.spyOn(apiService, 'getPokemonDetails').mockReturnValueOnce(
-      deferred.promise
-    );
+    const deferred = createDeferred<Response>();
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockReturnValueOnce(deferred.promise);
 
     renderPanel('/details/pikachu?page=3');
 
     expect(await screen.findByText('Loading details...')).toBeInTheDocument();
-    expect(apiService.getPokemonLink).toHaveBeenCalledWith('pikachu');
+    expect(getRequestUrl(fetchSpy.mock.calls[0][0])).toBe(
+      'https://pokeapi.co/api/v2/pokemon/pikachu'
+    );
 
-    deferred.resolve(mockPokemonDetails);
+    deferred.resolve(jsonResponse(mockPokemonDetails));
 
-    expect(await screen.findByRole('heading', { name: 'pikachu' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: 'pikachu' })
+    ).toBeInTheDocument();
     expect(screen.getByText('Height: 4')).toBeInTheDocument();
     expect(screen.getByText('Weight: 60')).toBeInTheDocument();
     expect(screen.getByText('Types: electric')).toBeInTheDocument();
@@ -127,26 +131,22 @@ describe('DetailsPanel', () => {
   });
 
   it('shows the request error message when loading fails', async () => {
-    vi.spyOn(apiService, 'getPokemonLink').mockReturnValue(
-      'https://pokeapi.co/api/v2/pokemon/pikachu'
-    );
-    vi.spyOn(apiService, 'getPokemonDetails').mockRejectedValueOnce(
-      new Error('Pokemon not found')
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      jsonResponse({ detail: 'Not found' }, 404)
     );
 
     renderPanel('/details/pikachu?page=3');
 
-    expect(await screen.findByText('Pokemon not found')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Pokemon not found. Check the name and try again.')
+    ).toBeInTheDocument();
   });
 
   it('closes the panel and preserves the current search params', async () => {
     const user = userEvent.setup();
 
-    vi.spyOn(apiService, 'getPokemonLink').mockReturnValue(
-      'https://pokeapi.co/api/v2/pokemon/pikachu'
-    );
-    vi.spyOn(apiService, 'getPokemonDetails').mockResolvedValueOnce(
-      mockPokemonDetails
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      jsonResponse(mockPokemonDetails)
     );
 
     renderPanel('/details/pikachu?page=4&limit=20');

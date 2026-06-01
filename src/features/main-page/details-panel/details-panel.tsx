@@ -1,52 +1,30 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import type { PokemonDetails } from '../../../shared/models';
-import { apiService } from '../../../shared/services/api/api-service';
+import { useGetPokemonDetailsQuery } from '../../../shared/services/api/api-service';
 import pokeballImage from '../../../assets/pokeball.png';
 import './details-panel.css';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
+import { getApiErrorMessage } from '../../../shared/helpers/getApiErrorMessage';
 
 export const DetailsPanel = () => {
   const { name } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const normalizedName = (name ?? '').toLowerCase();
 
-  const [details, setDetails] = useState<PokemonDetails | null>(null);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { data, isFetching, error } = useGetPokemonDetailsQuery(normalizedName, {
+    skip: !name,
+  });
   const { isDarkTheme } = useContext(DarkThemeContext);
-
-  useEffect(() => {
-    const fetchDetails = async () => {
-      if (!name) {
-        return;
-      }
-      setLoading(true);
-      setError('');
-      try {
-        const response = await apiService.getPokemonDetails(
-          apiService.getPokemonLink(name)
-        );
-        setDetails(response);
-      } catch (error) {
-        setError(
-          error instanceof Error ? error.message : 'Troubles loading pokempon'
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDetails();
-  }, [name]);
 
   const getPokemonImageUrl = useCallback(() => {
     return (
-      details?.sprites?.other?.['official-artwork']?.front_default ||
-      details?.sprites?.other?.home?.front_default ||
-      details?.sprites?.other?.dream_world?.front_default ||
+      data?.sprites?.other?.['official-artwork']?.front_default ||
+      data?.sprites?.other?.home?.front_default ||
+      data?.sprites?.other?.dream_world?.front_default ||
       pokeballImage
     );
-  }, [details]);
+  }, [data]);
 
   const handleClose = () => {
     navigate(`/?${searchParams.toString()}`);
@@ -60,24 +38,23 @@ export const DetailsPanel = () => {
         X
       </button>
 
-      {loading ? (
+      {isFetching ? (
         <div>
           <img className="spin" src={pokeballImage} alt="Loading" width="50" />
           <p>Loading details...</p>
         </div>
       ) : error ? (
-        <h2>{error}</h2>
-      ) : details ? (
+        <h2>{getApiErrorMessage(error)}</h2>
+      ) : data ? (
         <div>
-          <h2>{details.name}</h2>
+          <h2>{data.name}</h2>
           <div className="details_image_wrapper">
-            <img src={getPokemonImageUrl()} alt={details.name} />
+            <img src={getPokemonImageUrl()} alt={data.name} />
           </div>
-          <p>Height: {details.height}</p>
-          <p>Weight: {details.weight}</p>
+          <p>Height: {data.height}</p>
+          <p>Weight: {data.weight}</p>
           <p>
-            Types:{' '}
-            {(details.types || []).map((type) => type.type.name).join(', ')}
+            Types: {(data.types || []).map((type) => type.type.name).join(', ')}
           </p>
         </div>
       ) : (

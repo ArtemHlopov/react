@@ -12,7 +12,12 @@ export const SearchField = ({ filter, onFilterChange }: FilterProps) => {
   const { isDarkTheme } = useContext(DarkThemeContext);
 
   const handleInputChange = (value: unknown): void => {
-    setCurrentFilter(String(value));
+    const stringValue = String(value);
+
+    setCurrentFilter(stringValue);
+    if (!stringValue) {
+      onFilterChange?.('');
+    }
   };
 
   const handleSearchClick = (): void => {

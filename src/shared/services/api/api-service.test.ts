@@ -1,6 +1,12 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { apiService } from './api-service'; // 👈 ваш путь
-import type { PokemonListResponse, PokemonDetails } from '../../models';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { waitFor } from '@testing-library/react';
+import { createAppStore } from '../../../store/store';
+import {
+  getPokemonDetailsUrl,
+  paginationService,
+  pokemonApi,
+} from './api-service';
+import type { PokemonDetails, PokemonListResponse } from '../../models';
 
 const mockPokemonList: PokemonListResponse = {
   count: 100,
@@ -16,126 +22,143 @@ const mockPokemonDetails: PokemonDetails = {
   weight: 60,
 };
 
-describe('ApiService', () => {
-  beforeEach(() => {
-    apiService.setOffsetValue(0);
-    apiService.setLimitValue(10);
+const jsonResponse = (body: unknown, status = 200): Response =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
   });
 
+const getRequestUrl = (request: RequestInfo | URL): string =>
+  request instanceof Request ? request.url : request.toString();
+
+describe('pokemonApi', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  describe('getItemsList', () => {
-    it('return pokemon list response', async () => {
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve(mockPokemonList),
-      } as Response);
+  it('fetches the pokemon list through RTK Query with limit and offset params', async () => {
+    const store = createAppStore();
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse(mockPokemonList));
 
-      const result = await apiService.getItemsList();
+    const subscription = store.dispatch(
+      pokemonApi.endpoints.getPokemonList.initiate({
+        limit: 10,
+        offset: 0,
+      })
+    );
+    const result = await subscription.unwrap();
 
-      expect(result).toEqual(mockPokemonList);
-      expect(fetch).toHaveBeenCalledWith(
-        'https://pokeapi.co/api/v2/pokemon?limit=10&offset=0'
-      );
+    expect(result).toEqual(mockPokemonList);
+    expect(getRequestUrl(fetchSpy.mock.calls[0][0])).toBe(
+      'https://pokeapi.co/api/v2/pokemon?limit=10&offset=0'
+    );
+
+    subscription.unsubscribe();
+  });
+
+  it('fetches pokemon details through RTK Query', async () => {
+    const store = createAppStore();
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse(mockPokemonDetails));
+
+    const subscription = store.dispatch(
+      pokemonApi.endpoints.getPokemonDetails.initiate('Pikachu')
+    );
+    const result = await subscription.unwrap();
+
+    expect(result).toEqual(mockPokemonDetails);
+    expect(getRequestUrl(fetchSpy.mock.calls[0][0])).toBe(
+      'https://pokeapi.co/api/v2/pokemon/pikachu'
+    );
+
+    subscription.unsubscribe();
+  });
+
+  it('reuses cached list data for the same query args', async () => {
+    const store = createAppStore();
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockImplementation(() => Promise.resolve(jsonResponse(mockPokemonList)));
+    const queryArgs = { limit: 10, offset: 0 };
+
+    const firstSubscription = store.dispatch(
+      pokemonApi.endpoints.getPokemonList.initiate(queryArgs)
+    );
+    await firstSubscription.unwrap();
+
+    const secondSubscription = store.dispatch(
+      pokemonApi.endpoints.getPokemonList.initiate(queryArgs)
+    );
+    await secondSubscription.unwrap();
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+    firstSubscription.unsubscribe();
+    secondSubscription.unsubscribe();
+  });
+
+  it('invalidates cached list data and refetches subscribed queries', async () => {
+    const store = createAppStore();
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockImplementation(() => Promise.resolve(jsonResponse(mockPokemonList)));
+    const subscription = store.dispatch(
+      pokemonApi.endpoints.getPokemonList.initiate({ limit: 10, offset: 0 })
+    );
+
+    await subscription.unwrap();
+
+    store.dispatch(pokemonApi.util.invalidateTags(['PokemonList']));
+
+    await waitFor(() => {
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
     });
 
-    it('use current offset/limits', async () => {
-      apiService.setOffsetValue(20);
-      apiService.setLimitValue(5);
+    subscription.unsubscribe();
+  });
 
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve(mockPokemonList),
-      } as Response);
-
-      await apiService.getItemsList();
-
-      expect(fetch).toHaveBeenCalledWith(
-        'https://pokeapi.co/api/v2/pokemon?limit=5&offset=20'
+  it('invalidates cached details data and refetches subscribed queries', async () => {
+    const store = createAppStore();
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockImplementation(() =>
+        Promise.resolve(jsonResponse(mockPokemonDetails))
       );
+    const subscription = store.dispatch(
+      pokemonApi.endpoints.getPokemonDetails.initiate('pikachu')
+    );
+
+    await subscription.unwrap();
+
+    store.dispatch(
+      pokemonApi.util.invalidateTags([{ type: 'PokemonDetails', id: 'pikachu' }])
+    );
+
+    await waitFor(() => {
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
     });
 
-    it.each([
-      { status: 404, expected: 'Pokemon list not found' },
-      { status: 400, expected: 'Bad pokemon list request' },
-      { status: 500, expected: 'Server error, try again later' },
-      { status: 418, expected: 'Unknown error' },
-    ])(
-      'throw error depending on status on getList request',
-      async ({ status, expected }) => {
-        vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-          ok: false,
-          status,
-        } as Response);
+    subscription.unsubscribe();
+  });
+});
 
-        await expect(apiService.getItemsList()).rejects.toThrow(expected);
-      }
+describe('getPokemonDetailsUrl', () => {
+  it('returns a lowercase PokeAPI details URL', () => {
+    expect(getPokemonDetailsUrl('Pikachu')).toBe(
+      'https://pokeapi.co/api/v2/pokemon/pikachu'
     );
   });
+});
 
-  describe('getPokemonDetails', () => {
-    it('gets pokemon details', async () => {
-      const testUrl = 'https://pokeapi.co/api/v2/pokemon/test';
+describe('paginationService', () => {
+  it('stores pagination values', () => {
+    paginationService.setOffsetValue(42);
+    paginationService.setLimitValue(25);
 
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve(mockPokemonDetails),
-      } as Response);
-
-      const result = await apiService.getPokemonDetails(testUrl);
-
-      expect(result).toEqual(mockPokemonDetails);
-      expect(fetch).toHaveBeenCalledWith(testUrl);
-    });
-
-    it.each([
-      { status: 404, expected: 'Pokemon not found' },
-      { status: 400, expected: 'Bad request' },
-      { status: 500, expected: 'Server error, try again later' },
-      { status: 403, expected: 'Unknown error' },
-    ])(
-      'throw error depending on status on getDetails request',
-      async ({ status, expected }) => {
-        vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-          ok: false,
-          status,
-        } as Response);
-
-        await expect(
-          apiService.getPokemonDetails('https://example.com/pokemon/1')
-        ).rejects.toThrow(expected);
-      }
-    );
-  });
-
-  describe('getPokemonLink', () => {
-    it('return correct url', () => {
-      expect(apiService.getPokemonLink('Pikachu')).toBe(
-        'https://pokeapi.co/api/v2/pokemon/pikachu'
-      );
-    });
-
-    it('set props to lowercase', () => {
-      expect(apiService.getPokemonLink('CHARIZARD')).toBe(
-        'https://pokeapi.co/api/v2/pokemon/charizard'
-      );
-    });
-  });
-
-  describe('setOffsetValue / setLimitValue', () => {
-    it('set offset', () => {
-      apiService.setOffsetValue(42);
-      expect(apiService.offset).toBe(42);
-    });
-
-    it('set limit', () => {
-      apiService.setLimitValue(25);
-      expect(apiService.limit).toBe(25);
-    });
+    expect(paginationService.offset).toBe(42);
+    expect(paginationService.limit).toBe(25);
   });
 });

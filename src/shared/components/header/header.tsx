@@ -5,16 +5,25 @@ import { Button } from '../button/button';
 import { NavLink } from 'react-router-dom';
 import { useContext } from 'react';
 import { DarkThemeContext } from '../../context/appThemeContext';
+import { pokemonApi } from '../../services/api/api-service';
+import { useAppDispatch } from '../../../store/hooks';
 
 export const Header = () => {
   const [error, setError] = useState(false);
   const { isDarkTheme, toggleTheme } = useContext(DarkThemeContext);
+  const dispatch = useAppDispatch();
+
   const handleTestErrorClick = (): void => {
     setError(true);
   };
+
   if (error) {
     throw new Error('Test application error');
   }
+
+  const handleRefreshData = (): void => {
+    dispatch(pokemonApi.util.invalidateTags(['PokemonList', 'PokemonDetails']));
+  };
 
   return (
     <div
@@ -55,6 +64,11 @@ export const Header = () => {
           className="rounded_button"
           text="Test error"
           onClick={handleTestErrorClick}
+        />
+        <Button
+          className="rounded_button"
+          text="Refresh data"
+          onClick={handleRefreshData}
         />
         <Button
           className={`rounded_button ${isDarkTheme ? 'theme_button__dark' : ''}`}
