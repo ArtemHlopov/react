@@ -1,0 +1,19 @@
+.flyout_container {
+  padding: 0.3rem 3rem;
+  background-color: var(--light-red);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: var(--white);
+}
+
+.flyout_container__dark {
+  background-color: var(--dark-red);
+}
+
+.flyout_content,
+.flyout_buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}

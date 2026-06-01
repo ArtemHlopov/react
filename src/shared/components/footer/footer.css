@@ -1,0 +1,12 @@
+.footer_wrapper {
+  padding: 0.5rem 3rem;
+  background-color: var(--light-red);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer_wrpper__dark {
+  background-color: var(--dark-red);
+  color: var(--white);
+}
