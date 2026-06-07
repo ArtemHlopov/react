@@ -6,6 +6,9 @@ import {
 } from '../../../models/common';
 import { addSubmittedForm } from '../../../store/submitted-form-slice';
 import { useAppDispatch } from '../../../store/hooks';
+import Autocomplete from '../../autocomplete/autocomplete';
+import { imageToBase64 } from '../../../helpers/image-to-base64';
+import './controlled-form.css';
 
 function ControlledForm() {
   const { control, handleSubmit } = useForm<FormValue>({
@@ -15,6 +18,10 @@ function ControlledForm() {
       email: '',
       gender: GenderEnum.unknown,
       terms: false,
+      country: '',
+      password: '',
+      password_confirm: '',
+      image: '',
     },
   });
   const dispatch = useAppDispatch();
@@ -24,7 +31,10 @@ function ControlledForm() {
   };
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="controlled_form_wrapper"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <h3>Controlled Form</h3>
         <Controller
           name="name"
@@ -84,6 +94,67 @@ function ControlledForm() {
                 name={field.name}
                 checked={field.value}
                 onChange={field.onChange}
+              />
+            </label>
+          )}
+        />
+        <Controller
+          name="country"
+          control={control}
+          render={({ field }) => (
+            <label htmlFor={field.name}>
+              Country
+              <Autocomplete
+                id={field.name}
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Select country"
+              />
+            </label>
+          )}
+        />
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <label htmlFor={field.name}>
+              Password
+              <input id={field.name} type="password" {...field} />
+            </label>
+          )}
+        />
+        <Controller
+          name="password_confirm"
+          control={control}
+          render={({ field }) => (
+            <label htmlFor={field.name}>
+              Confirm Password
+              <input id={field.name} type="password" {...field} />
+            </label>
+          )}
+        />
+        <Controller
+          name="image"
+          control={control}
+          render={({ field: { onChange } }) => (
+            <label htmlFor="image">
+              Image (PNG / JPEG)
+              <input
+                id="image"
+                type="file"
+                accept="image/png,image/jpeg"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  try {
+                    const base64 = await imageToBase64(file);
+                    onChange(base64);
+                  } catch (error) {
+                    onChange('');
+                    console.error(error);
+                  }
+                }}
               />
             </label>
           )}

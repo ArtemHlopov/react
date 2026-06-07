@@ -11,7 +11,20 @@ function App() {
       <Header></Header>
       {submitted.submittedForms.length
         ? submitted.submittedForms.map((form: FormTypedValue) => (
-            <div key={form.name}>{form.name}</div>
+            <div key={form.id}>
+              <div>{form.name}</div>
+              <div>{form.age}</div>
+              <div>{form.email}</div>
+              <div>{form.country}</div>
+              <div>{form.terms}</div>
+              <div>{form.type}</div>
+              <div>{form.password}</div>
+              {form.image && (
+                <div>
+                  <img src={form.image} alt="image" />
+                </div>
+              )}
+            </div>
           ))
         : 'There is no submitted forms yet'}
     </>

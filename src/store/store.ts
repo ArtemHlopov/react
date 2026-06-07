@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import submittedFormsReducer from './submitted-form-slice';
+import countriesReducer from './countries-slice';
 
 const createAppStore = () =>
   configureStore({
     reducer: {
       submittedForms: submittedFormsReducer,
+      countries: countriesReducer,
     },
     devTools: true,
   });

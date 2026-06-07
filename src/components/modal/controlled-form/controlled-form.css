@@ -1,0 +1,6 @@
+.controlled_form_wrapper,
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

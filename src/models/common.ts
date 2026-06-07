@@ -6,9 +6,13 @@ export interface FormValue {
   email: string;
   gender: string;
   terms: boolean;
+  country: string;
+  password: string;
+  password_confirm: string;
+  image: string;
 }
 
-export type FormTypedValue = FormValue & { type: FormType };
+export type FormTypedValue = FormValue & { type: FormType; id: string };
 
 export enum FormTypeEnum {
   controlled = 'controlled',

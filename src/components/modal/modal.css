@@ -1,19 +1,21 @@
 .modal_wrapper {
-  width: 50dvh;
-  height: 50dvh;
-  overflow: hidden;
+  max-width: 80dvw;
+  max-height: 80dvh;
+  overflow: auto;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   border: 1px solid black;
+  background: #fff;
+  z-index: 5;
 }
 
 .modal_wrapper,
 .form_wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 3rem;
 }
 
 .form_wrapper {
