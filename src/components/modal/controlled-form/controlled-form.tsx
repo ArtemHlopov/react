@@ -1,5 +1,11 @@
 import { Controller, useForm } from 'react-hook-form';
-import type { FormValue } from '../../../models/common';
+import {
+  FormTypeEnum,
+  GenderEnum,
+  type FormValue,
+} from '../../../models/common';
+import { addSubmittedForm } from '../../../store/submitted-form-slice';
+import { useAppDispatch } from '../../../store/hooks';
 
 function ControlledForm() {
   const { control, handleSubmit } = useForm<FormValue>({
@@ -7,12 +13,15 @@ function ControlledForm() {
       name: '',
       age: 0,
       email: '',
-      gender: 'unknown',
+      gender: GenderEnum.unknown,
       terms: false,
     },
   });
+  const dispatch = useAppDispatch();
 
-  const onSubmit = (data: FormValue) => console.log(data);
+  const onSubmit = (data: FormValue) => {
+    dispatch(addSubmittedForm({ ...data, type: FormTypeEnum.controlled }));
+  };
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -54,9 +63,11 @@ function ControlledForm() {
             <label htmlFor={field.name}>
               Gender
               <select id={field.name} {...field}>
-                <option value="unknown">Unknown</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                {Object.keys(GenderEnum).map((gender) => (
+                  <option key={gender} value={gender}>
+                    {gender}
+                  </option>
+                ))}
               </select>
             </label>
           )}

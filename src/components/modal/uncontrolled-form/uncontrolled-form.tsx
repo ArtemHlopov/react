@@ -1,5 +1,11 @@
 import { useRef } from 'react';
-import type { FormValue } from '../../../models/common';
+import {
+  FormTypeEnum,
+  GenderEnum,
+  type FormValue,
+} from '../../../models/common';
+import { useAppDispatch } from '../../../store/hooks';
+import { addSubmittedForm } from '../../../store/submitted-form-slice';
 
 function UncontrolledForm() {
   const uncontrolled_name = useRef<HTMLInputElement>(null);
@@ -8,6 +14,8 @@ function UncontrolledForm() {
   const uncontrolled_email = useRef<HTMLInputElement>(null);
   const uncontrolled_terms = useRef<HTMLInputElement>(null);
 
+  const dispatch = useAppDispatch();
+
   const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -15,11 +23,11 @@ function UncontrolledForm() {
       name: uncontrolled_name.current?.value || '',
       age: Number(uncontrolled_age.current?.value) || 0,
       email: uncontrolled_email.current?.value || '',
-      gender: uncontrolled_gender.current?.value || 'unknown',
+      gender: uncontrolled_gender.current?.value || GenderEnum.unknown,
       terms: uncontrolled_terms.current?.checked || false,
     };
 
-    console.log(data);
+    dispatch(addSubmittedForm({ ...data, type: FormTypeEnum.uncontrolled }));
   };
 
   return (
@@ -54,9 +62,11 @@ function UncontrolledForm() {
           name="gender"
           ref={uncontrolled_gender}
         >
-          <option value="unknown">Unknown</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
+          {Object.keys(GenderEnum).map((gender) => (
+            <option key={gender} value={gender}>
+              {gender}
+            </option>
+          ))}
         </select>
         <label htmlFor="uncontrolled_terms">Terms and Conditions</label>
         <input
