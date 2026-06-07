@@ -4,6 +4,9 @@ import './modal.css';
 import { useOutsideClick } from '../../hooks/outsideclic.l';
 import { useEscClick } from '../../hooks/escClick';
 
+import UncontrolledForm from './uncontrolled-form/uncontrolled-form';
+import ControlledForm from './controlled-form/controlled-form';
+
 interface ModalProps {
   onClose: Callback;
 }
@@ -12,11 +15,17 @@ function Modal({ onClose }: ModalProps) {
   const ref = useRef<HTMLDivElement>(null);
   useOutsideClick(onClose, ref);
   useEscClick(onClose, ref);
+
   return (
     <>
       <div className="modal_wrapper" ref={ref}>
-        <h6>Modal content</h6>
-        <button onClick={onClose}>Close modal</button>
+        <div className="form_wrapper">
+          <ControlledForm />
+          <UncontrolledForm />
+        </div>
+        <button type="button" onClick={onClose}>
+          Close modal
+        </button>
       </div>
     </>
   );
