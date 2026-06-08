@@ -3,14 +3,20 @@ import { imageToBase64 } from '../../../helpers/image-to-base64';
 import {
   FormTypeEnum,
   GenderEnum,
+  type Callback,
+  type FormTypedValue,
   type FormValue,
 } from '../../../models/common';
 import { useAppDispatch } from '../../../store/hooks';
 import { addSubmittedForm } from '../../../store/submitted-form-slice';
 import Autocomplete from '../../autocomplete/autocomplete';
 import './uncontrolled-form.css';
+import { formSchema } from '../form-config';
+import { COUNTRIES_LIST } from '../../../store/countries-slice';
+import * as yup from 'yup';
 
-function UncontrolledForm() {
+function UncontrolledForm({ onClose }: { onClose: Callback }) {
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const uncontrolled_name = useRef<HTMLInputElement>(null);
   const uncontrolled_age = useRef<HTMLInputElement>(null);
   const uncontrolled_gender = useRef<HTMLSelectElement>(null);
@@ -19,11 +25,11 @@ function UncontrolledForm() {
   const uncontrolled_country = useRef<HTMLInputElement>(null);
   const uncontrolled_password = useRef<HTMLInputElement>(null);
   const uncontrolled_password_confirm = useRef<HTMLInputElement>(null);
-  const [imageBase64, setImageBase64] = useState('');
+  const uncontrolled_image = useRef<HTMLInputElement>(null);
 
   const dispatch = useAppDispatch();
 
-  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const data: FormValue = {
@@ -35,22 +41,44 @@ function UncontrolledForm() {
       country: uncontrolled_country.current?.value || '',
       password: uncontrolled_password.current?.value || '',
       password_confirm: uncontrolled_password_confirm.current?.value || '',
-      image: imageBase64,
+      image: uncontrolled_image.current?.files?.[0] || null,
     };
 
-    dispatch(addSubmittedForm({ ...data, type: FormTypeEnum.uncontrolled }));
+    try {
+      await formSchema(COUNTRIES_LIST).validate(data, { abortEarly: false });
+      setErrors({});
+      dispatch(addSubmittedForm(await preparedData(data)));
+      onClose();
+    } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        const formattedErrors: Record<string, string> = {};
+
+        error.inner.forEach((error) => {
+          if (error.path) {
+            formattedErrors[error.path] = error.message;
+          }
+        });
+
+        setErrors(formattedErrors);
+      }
+    }
   };
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      const base64 = await imageToBase64(file);
-      setImageBase64(base64);
-    } catch (error) {
-      console.error(error);
-      setImageBase64('');
+  const preparedData = async (data: FormValue): Promise<FormTypedValue> => {
+    let base64 = '';
+    if (data.image) {
+      try {
+        base64 = await imageToBase64(data.image);
+      } catch (error) {
+        console.error(error);
+      }
     }
+    return {
+      ...data,
+      image: base64,
+      id: crypto.randomUUID(),
+      type: FormTypeEnum.uncontrolled,
+    };
   };
 
   return (
@@ -64,6 +92,7 @@ function UncontrolledForm() {
           name="name"
           ref={uncontrolled_name}
         />
+        {errors.name && <p>{errors.name}</p>}
         <label htmlFor="uncontrolled_age">Age</label>
         <input
           id="uncontrolled_age"
@@ -72,6 +101,7 @@ function UncontrolledForm() {
           min="0"
           ref={uncontrolled_age}
         />
+        {errors.age && <p>{errors.age}</p>}
         <label htmlFor="uncontrolled_email">Email</label>
         <input
           id="uncontrolled_email"
@@ -79,6 +109,7 @@ function UncontrolledForm() {
           name="email"
           ref={uncontrolled_email}
         />
+        {errors.email && <p>{errors.email}</p>}
         <label htmlFor="uncontrolled_gender">Gender</label>
         <select
           id="uncontrolled_gender"
@@ -91,6 +122,7 @@ function UncontrolledForm() {
             </option>
           ))}
         </select>
+        {errors.gender && <p>{errors.gender}</p>}
         <label htmlFor="uncontrolled_terms">Terms and Conditions</label>
         <input
           id="uncontrolled_terms"
@@ -98,6 +130,7 @@ function UncontrolledForm() {
           name="terms"
           ref={uncontrolled_terms}
         />
+        {errors.terms && <p>{errors.terms}</p>}
         <label htmlFor="uncontrolled_country">Country</label>
         <Autocomplete
           id="uncontrolled_country"
@@ -105,6 +138,7 @@ function UncontrolledForm() {
           name="country"
           placeholder="Select country"
         />
+        {errors.country && <p>{errors.country}</p>}
         <label htmlFor="uncontrolled_password">Password</label>
         <input
           id="uncontrolled_password"
@@ -112,6 +146,7 @@ function UncontrolledForm() {
           name="password"
           ref={uncontrolled_password}
         />
+        {errors.password && <p>{errors.password}</p>}
         <label htmlFor="uncontrolled_password_confirm">Confirm Password</label>
         <input
           id="uncontrolled_password_confirm"
@@ -119,6 +154,7 @@ function UncontrolledForm() {
           name="password_confirm"
           ref={uncontrolled_password_confirm}
         />
+        {errors.password_confirm && <p>{errors.password_confirm}</p>}
         <label htmlFor="uncontrolled_image">
           Image (PNG / JPEG)
           <input
@@ -126,9 +162,10 @@ function UncontrolledForm() {
             type="file"
             name="image"
             accept="image/png,image/jpeg"
-            onChange={handleImageChange}
+            ref={uncontrolled_image}
           />
         </label>
+        {errors.image && <p>{errors.image}</p>}
         <button type="submit">Submit</button>
       </form>
     </>

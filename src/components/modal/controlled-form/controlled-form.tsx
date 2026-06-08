@@ -1,7 +1,9 @@
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, type Resolver } from 'react-hook-form';
 import {
   FormTypeEnum,
   GenderEnum,
+  type Callback,
+  type FormTypedValue,
   type FormValue,
 } from '../../../models/common';
 import { addSubmittedForm } from '../../../store/submitted-form-slice';
@@ -9,9 +11,17 @@ import { useAppDispatch } from '../../../store/hooks';
 import Autocomplete from '../../autocomplete/autocomplete';
 import { imageToBase64 } from '../../../helpers/image-to-base64';
 import './controlled-form.css';
+import { yupResolver } from '@hookform/resolvers/yup/src/yup.js';
+import { formSchema } from '../form-config';
+import { COUNTRIES_LIST } from '../../../store/countries-slice';
 
-function ControlledForm() {
-  const { control, handleSubmit } = useForm<FormValue>({
+function ControlledForm({ onClose }: { onClose: Callback }) {
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<FormValue>({
+    mode: 'onChange',
     defaultValues: {
       name: '',
       age: 0,
@@ -21,14 +31,35 @@ function ControlledForm() {
       country: '',
       password: '',
       password_confirm: '',
-      image: '',
+      image: null,
     },
+    resolver: yupResolver(formSchema(COUNTRIES_LIST)) as Resolver<FormValue>,
   });
   const dispatch = useAppDispatch();
 
-  const onSubmit = (data: FormValue) => {
-    dispatch(addSubmittedForm({ ...data, type: FormTypeEnum.controlled }));
+  const preparedData = async (data: FormValue): Promise<FormTypedValue> => {
+    let base64 = '';
+    if (data.image) {
+      try {
+        base64 = await imageToBase64(data.image);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return {
+      ...data,
+      image: base64,
+      id: crypto.randomUUID(),
+      type: FormTypeEnum.controlled,
+    };
   };
+
+  const onSubmit = async (data: FormValue) => {
+    const transformedData = await preparedData(data);
+    dispatch(addSubmittedForm(transformedData));
+    onClose();
+  };
+
   return (
     <>
       <form
@@ -39,37 +70,40 @@ function ControlledForm() {
         <Controller
           name="name"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <label htmlFor={field.name}>
               Name
               <input id={field.name} type="text" {...field} />
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
         <Controller
           name="age"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <label htmlFor={field.name}>
               Age
               <input id={field.name} type="number" min="0" {...field} />
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
         <Controller
           name="email"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <label htmlFor={field.name}>
               Email
               <input id={field.name} type="email" {...field} />
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
         <Controller
           name="gender"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <label htmlFor={field.name}>
               Gender
               <select id={field.name} {...field}>
@@ -79,13 +113,14 @@ function ControlledForm() {
                   </option>
                 ))}
               </select>
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
         <Controller
           name="terms"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <label htmlFor={field.name}>
               Terms and Conditions
               <input
@@ -95,13 +130,14 @@ function ControlledForm() {
                 checked={field.value}
                 onChange={field.onChange}
               />
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
         <Controller
           name="country"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <label htmlFor={field.name}>
               Country
               <Autocomplete
@@ -111,55 +147,57 @@ function ControlledForm() {
                 onChange={field.onChange}
                 placeholder="Select country"
               />
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
         <Controller
           name="password"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <label htmlFor={field.name}>
               Password
               <input id={field.name} type="password" {...field} />
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
         <Controller
           name="password_confirm"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <label htmlFor={field.name}>
               Confirm Password
               <input id={field.name} type="password" {...field} />
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
         <Controller
           name="image"
           control={control}
-          render={({ field: { onChange } }) => (
+          render={({
+            field: { onChange, onBlur, name, ref },
+            fieldState: { error },
+          }) => (
             <label htmlFor="image">
               Image (PNG / JPEG)
               <input
                 id="image"
                 type="file"
                 accept="image/png,image/jpeg"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  try {
-                    const base64 = await imageToBase64(file);
-                    onChange(base64);
-                  } catch (error) {
-                    onChange('');
-                    console.error(error);
-                  }
-                }}
+                name={name}
+                ref={ref}
+                onBlur={onBlur}
+                onChange={(e) => onChange(e.target.files?.[0] ?? null)}
               />
+              {error && <p>{error.message}</p>}
             </label>
           )}
         />
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={!isValid}>
+          Submit
+        </button>
       </form>
     </>
   );

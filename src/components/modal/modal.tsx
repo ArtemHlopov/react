@@ -18,14 +18,14 @@ function Modal({ onClose }: ModalProps) {
 
   return (
     <>
-      <div className="modal_wrapper" ref={ref}>
-        <div className="form_wrapper">
-          <ControlledForm />
-          <UncontrolledForm />
+      <div className="modal_wrapper">
+        <div className="form_wrapper" ref={ref}>
+          <ControlledForm onClose={onClose} />
+          <UncontrolledForm onClose={onClose} />
+          <button className="close_btn" type="button" onClick={onClose}>
+            X
+          </button>
         </div>
-        <button type="button" onClick={onClose}>
-          Close modal
-        </button>
       </div>
     </>
   );

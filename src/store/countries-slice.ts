@@ -5,16 +5,18 @@ interface CountriesState {
   countries: string[];
 }
 
+export const COUNTRIES_LIST = [
+  'Belarus',
+  'Poland',
+  'Russia',
+  'Ukraine',
+  'Germany',
+  'France',
+  'Italy',
+];
+
 const initialState: CountriesState = {
-  countries: [
-    'Belarus',
-    'Poland',
-    'Russia',
-    'Ukraine',
-    'Germany',
-    'France',
-    'Italy',
-  ],
+  countries: COUNTRIES_LIST,
 };
 
 const countriesSlice = createSlice({

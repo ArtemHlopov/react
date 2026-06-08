@@ -14,8 +14,8 @@ const submittedFormSlice = createSlice({
   name: 'submittedForms',
   initialState,
   reducers: {
-    addSubmittedForm: (state, action: PayloadAction<Omit<FormTypedValue, 'id'>>) => {
-      state.submittedForms.push({ ...action.payload, id: crypto.randomUUID() });
+    addSubmittedForm: (state, action: PayloadAction<FormTypedValue>) => {
+      state.submittedForms.push(action.payload);
     },
   },
 });

@@ -1,7 +1,7 @@
-const ALLOWED_TYPES = ['image/png', 'image/jpeg'];
+export const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg'];
 
 export function imageToBase64(file: File): Promise<string> {
-  if (!ALLOWED_TYPES.includes(file.type)) {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
     return Promise.reject(new Error('Only PNG and JPEG images are allowed'));
   }
 

@@ -9,10 +9,14 @@ export interface FormValue {
   country: string;
   password: string;
   password_confirm: string;
-  image: string;
+  image: File | null;
 }
 
-export type FormTypedValue = FormValue & { type: FormType; id: string };
+export type FormTypedValue = Omit<FormValue, 'image'> & {
+  type: FormType;
+  id: string;
+  image: string;
+};
 
 export enum FormTypeEnum {
   controlled = 'controlled',
