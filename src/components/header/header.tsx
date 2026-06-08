@@ -8,12 +8,11 @@ function Header() {
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   return (
-    <>
+    <header className="header">
       <button onClick={toggleModal}>Open modal</button>
-      <h6>header</h6>
       {isModalOpen &&
-        createPortal(<Modal onClose={toggleModal}></Modal>, document.body)}
-    </>
+        createPortal(<Modal onClose={toggleModal} />, document.body)}
+    </header>
   );
 }
 

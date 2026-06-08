@@ -29,8 +29,8 @@ export const formSchema = (countries: string[]) =>
       }),
     age: yup
       .number()
-      .min(0, 'Age must be positive number')
-      .required('Age is required'),
+      .required('Age is required')
+      .min(1, 'Age required and must be positive'),
     email: yup
       .string()
       .required('Email is required')

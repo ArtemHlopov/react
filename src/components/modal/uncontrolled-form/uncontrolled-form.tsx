@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import PasswordStrength from '../../password-strength/password-strength';
 import { imageToBase64 } from '../../../helpers/image-to-base64';
 import {
   FormTypeEnum,
@@ -17,6 +18,7 @@ import * as yup from 'yup';
 
 function UncontrolledForm({ onClose }: { onClose: Callback }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [passwordValue, setPasswordValue] = useState('');
   const uncontrolled_name = useRef<HTMLInputElement>(null);
   const uncontrolled_age = useRef<HTMLInputElement>(null);
   const uncontrolled_gender = useRef<HTMLSelectElement>(null);
@@ -34,7 +36,7 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
 
     const data: FormValue = {
       name: uncontrolled_name.current?.value || '',
-      age: Number(uncontrolled_age.current?.value) || 0,
+      age: Number(uncontrolled_age.current?.value),
       email: uncontrolled_email.current?.value || '',
       gender: uncontrolled_gender.current?.value || GenderEnum.unknown,
       terms: uncontrolled_terms.current?.checked || false,
@@ -58,7 +60,6 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
             formattedErrors[error.path] = error.message;
           }
         });
-
         setErrors(formattedErrors);
       }
     }
@@ -92,7 +93,7 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
           name="name"
           ref={uncontrolled_name}
         />
-        {errors.name && <p>{errors.name}</p>}
+        {errors.name && <p className="validation_error">{errors.name}</p>}
         <label htmlFor="uncontrolled_age">Age</label>
         <input
           id="uncontrolled_age"
@@ -101,7 +102,7 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
           min="0"
           ref={uncontrolled_age}
         />
-        {errors.age && <p>{errors.age}</p>}
+        {errors.age && <p className="validation_error">{errors.age}</p>}
         <label htmlFor="uncontrolled_email">Email</label>
         <input
           id="uncontrolled_email"
@@ -109,7 +110,7 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
           name="email"
           ref={uncontrolled_email}
         />
-        {errors.email && <p>{errors.email}</p>}
+        {errors.email && <p className="validation_error">{errors.email}</p>}
         <label htmlFor="uncontrolled_gender">Gender</label>
         <select
           id="uncontrolled_gender"
@@ -122,7 +123,7 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
             </option>
           ))}
         </select>
-        {errors.gender && <p>{errors.gender}</p>}
+        {errors.gender && <p className="validation_error">{errors.gender}</p>}
         <label htmlFor="uncontrolled_terms">Terms and Conditions</label>
         <input
           id="uncontrolled_terms"
@@ -130,7 +131,7 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
           name="terms"
           ref={uncontrolled_terms}
         />
-        {errors.terms && <p>{errors.terms}</p>}
+        {errors.terms && <p className="validation_error">{errors.terms}</p>}
         <label htmlFor="uncontrolled_country">Country</label>
         <Autocomplete
           id="uncontrolled_country"
@@ -138,15 +139,19 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
           name="country"
           placeholder="Select country"
         />
-        {errors.country && <p>{errors.country}</p>}
+        {errors.country && <p className="validation_error">{errors.country}</p>}
         <label htmlFor="uncontrolled_password">Password</label>
         <input
           id="uncontrolled_password"
           type="password"
           name="password"
           ref={uncontrolled_password}
+          onChange={(e) => setPasswordValue(e.target.value)}
         />
-        {errors.password && <p>{errors.password}</p>}
+        <PasswordStrength password={passwordValue} />
+        {errors.password && (
+          <p className="validation_error">{errors.password}</p>
+        )}
         <label htmlFor="uncontrolled_password_confirm">Confirm Password</label>
         <input
           id="uncontrolled_password_confirm"
@@ -154,7 +159,9 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
           name="password_confirm"
           ref={uncontrolled_password_confirm}
         />
-        {errors.password_confirm && <p>{errors.password_confirm}</p>}
+        {errors.password_confirm && (
+          <p className="validation_error">{errors.password_confirm}</p>
+        )}
         <label htmlFor="uncontrolled_image">
           Image (PNG / JPEG)
           <input
@@ -165,7 +172,7 @@ function UncontrolledForm({ onClose }: { onClose: Callback }) {
             ref={uncontrolled_image}
           />
         </label>
-        {errors.image && <p>{errors.image}</p>}
+        {errors.image && <p className="validation_error">{errors.image}</p>}
         <button type="submit">Submit</button>
       </form>
     </>

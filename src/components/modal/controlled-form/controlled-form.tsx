@@ -1,4 +1,5 @@
-import { Controller, useForm, type Resolver } from 'react-hook-form';
+import { Controller, useForm, useWatch, type Resolver } from 'react-hook-form';
+import PasswordStrength from '../../password-strength/password-strength';
 import {
   FormTypeEnum,
   GenderEnum,
@@ -36,6 +37,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
     resolver: yupResolver(formSchema(COUNTRIES_LIST)) as Resolver<FormValue>,
   });
   const dispatch = useAppDispatch();
+  const passwordValue = useWatch({ control, name: 'password' });
 
   const preparedData = async (data: FormValue): Promise<FormTypedValue> => {
     let base64 = '';
@@ -74,7 +76,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
             <label htmlFor={field.name}>
               Name
               <input id={field.name} type="text" {...field} />
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
@@ -85,7 +87,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
             <label htmlFor={field.name}>
               Age
               <input id={field.name} type="number" min="0" {...field} />
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
@@ -96,7 +98,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
             <label htmlFor={field.name}>
               Email
               <input id={field.name} type="email" {...field} />
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
@@ -113,7 +115,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
                   </option>
                 ))}
               </select>
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
@@ -130,7 +132,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
                 checked={field.value}
                 onChange={field.onChange}
               />
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
@@ -147,7 +149,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
                 onChange={field.onChange}
                 placeholder="Select country"
               />
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
@@ -158,10 +160,11 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
             <label htmlFor={field.name}>
               Password
               <input id={field.name} type="password" {...field} />
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
+        <PasswordStrength password={passwordValue} />
         <Controller
           name="password_confirm"
           control={control}
@@ -169,7 +172,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
             <label htmlFor={field.name}>
               Confirm Password
               <input id={field.name} type="password" {...field} />
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
@@ -191,7 +194,7 @@ function ControlledForm({ onClose }: { onClose: Callback }) {
                 onBlur={onBlur}
                 onChange={(e) => onChange(e.target.files?.[0] ?? null)}
               />
-              {error && <p>{error.message}</p>}
+              {error && <p className="validation_error">{error.message}</p>}
             </label>
           )}
         />
