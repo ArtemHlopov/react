@@ -12,7 +12,7 @@ import { useAppDispatch } from '../../../store/hooks';
 import Autocomplete from '../../autocomplete/autocomplete';
 import { imageToBase64 } from '../../../helpers/image-to-base64';
 import './controlled-form.css';
-import { yupResolver } from '@hookform/resolvers/yup/src/yup.js';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { formSchema } from '../form-config';
 import { COUNTRIES_LIST } from '../../../store/countries-slice';
 
