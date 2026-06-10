@@ -1,0 +1,48 @@
+.modal_wrapper {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.form_wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: flex-start;
+  background: var(--color-surface);
+  border-radius: calc(var(--radius) * 2);
+  box-shadow: var(--shadow);
+  padding: 2.5rem;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.close_btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-border);
+  color: var(--color-text);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 !important;
+}
+
+.close_btn:hover {
+  background: #d1d5db;
+}
