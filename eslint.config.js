@@ -7,16 +7,19 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import { settings } from 'node:cluster';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', '.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
+      ...nextVitals,
+      ...nextTs,
       reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
       reactPlugin.configs.flat.recommended,
       reactPlugin.configs.flat['jsx-runtime'],
       eslintConfigPrettier,
@@ -28,6 +31,15 @@ export default defineConfig([
       react: {
         version: 'detect',
       },
+    },
+    plugins: {
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
     },
   },
 ]);

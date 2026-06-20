@@ -1,3 +1,4 @@
+'use client';
 import { useId, type ChangeEvent, useContext } from 'react';
 import type { Callback, CustomComponentProps } from '../../models';
 import './select.css';

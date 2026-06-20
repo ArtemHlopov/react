@@ -1,20 +1,24 @@
 import { useCallback, useContext } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useGetPokemonDetailsQuery } from '../../../shared/services/api/api-service';
 import pokeballImage from '../../../assets/pokeball.png';
 import './details-panel.css';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
 import { getApiErrorMessage } from '../../../shared/helpers/getApiErrorMessage';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 export const DetailsPanel = () => {
-  const { name } = useParams();
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const params = useParams();
+  const name = params?.name as string;
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const normalizedName = (name ?? '').toLowerCase();
 
-  const { data, isFetching, error } = useGetPokemonDetailsQuery(normalizedName, {
-    skip: !name,
-  });
+  const { data, isFetching, error } = useGetPokemonDetailsQuery(
+    normalizedName,
+    {
+      skip: !name,
+    }
+  );
   const { isDarkTheme } = useContext(DarkThemeContext);
 
   const getPokemonImageUrl = useCallback(() => {
@@ -27,7 +31,8 @@ export const DetailsPanel = () => {
   }, [data]);
 
   const handleClose = () => {
-    navigate(`/?${searchParams.toString()}`);
+    const params = new URLSearchParams(searchParams?.toString());
+    router.push(`/?${params.toString()}`);
   };
 
   return (

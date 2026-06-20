@@ -1,3 +1,4 @@
+'use client';
 import './footer.css';
 import type { CustomComponentProps } from '../../models';
 import { useContext } from 'react';

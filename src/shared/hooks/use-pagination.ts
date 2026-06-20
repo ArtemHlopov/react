@@ -1,29 +1,18 @@
-import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+'use client';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 export const usePagination = (defaultPage = 1) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const pageParam = searchParams.get('page');
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
 
-  useEffect(() => {
-    if (!pageParam) {
-      setSearchParams(
-        (prev) => {
-          prev.set('page', String(defaultPage));
-          return prev;
-        },
-        { replace: true }
-      );
-    }
-  }, [pageParam, setSearchParams, defaultPage]);
-
+  const pageParam = searchParams?.get('page');
   const currentPage = Number(pageParam) || defaultPage;
 
   const setPage = (page: number) => {
-    setSearchParams((prev) => {
-      prev.set('page', String(page));
-      return prev;
-    });
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set('page', String(page));
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   return { currentPage, setPage };

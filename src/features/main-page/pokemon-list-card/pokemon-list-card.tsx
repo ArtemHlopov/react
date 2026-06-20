@@ -1,3 +1,4 @@
+'use client';
 import { useCallback, useContext, useMemo } from 'react';
 import type {
   CustomComponentProps,
@@ -7,7 +8,6 @@ import { useGetPokemonDetailsQuery } from '../../../shared/services/api/api-serv
 import pokeballCardLoader from '../../../assets/pokeball.png';
 import './pokemon-list-card.css';
 import { capitalizeStr } from '../../../shared/helpers/capitalizeStr';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import {
@@ -15,6 +15,7 @@ import {
   toggleSelectedPokemon,
 } from '../../../store/selectedPokemonSlice';
 import { getApiErrorMessage } from '../../../shared/helpers/getApiErrorMessage';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface PokemonCardProps extends CustomComponentProps {
   pokemonBaseInfo: PokemonListResponseResult;
@@ -27,8 +28,10 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
     pokemonBaseInfo.name
   );
 
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const { isDarkTheme } = useContext(DarkThemeContext);
   const dispatch = useAppDispatch();
   const selectedPokemons = useAppSelector(selectedPokemonsSelector);
@@ -38,10 +41,11 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
   );
 
   const handleCardClick = (): void => {
-    if (!data) {
+    if (!data && !searchParams) {
       return;
     }
-    navigate(`details/${data.name}?${searchParams}`);
+    const params = new URLSearchParams(searchParams?.toString());
+    router.push(`/details/${data?.name}?${params.toString()}`);
   };
 
   const handleCheckboxClick = (): void => {

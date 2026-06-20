@@ -1,3 +1,4 @@
+'use client';
 import { useId, type MouseEvent } from 'react';
 import type { Callback, CustomComponentProps } from '../../models';
 

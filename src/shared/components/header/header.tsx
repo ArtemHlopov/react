@@ -1,17 +1,23 @@
+'use client';
 import { useState } from 'react';
 import pokedexImage from '../../../assets/Pokédex_logo.png';
 import './header.css';
 import { Button } from '../button/button';
-import { NavLink } from 'react-router-dom';
 import { useContext } from 'react';
 import { DarkThemeContext } from '../../context/appThemeContext';
 import { pokemonApi } from '../../services/api/api-service';
 import { useAppDispatch } from '../../../store/hooks';
+import { usePathname } from 'next/navigation';
+import { LanguageSwitcher } from '../language-switcher/language-switcher';
+import { useTranslations } from 'next-intl';
+import { Link } from '../../navigation/navigation';
 
 export const Header = () => {
   const [error, setError] = useState(false);
   const { isDarkTheme, toggleTheme } = useContext(DarkThemeContext);
   const dispatch = useAppDispatch();
+  const pathname = usePathname();
+  const t = useTranslations('header');
 
   const handleTestErrorClick = (): void => {
     setError(true);
@@ -32,49 +38,48 @@ export const Header = () => {
       <div className="header_nav">
         <img className="header_logo" src={pokedexImage} alt="pokedex" />
         <nav>
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              isActive ? 'header_link active' : 'header_link'
+          <Link
+            href="/"
+            className={pathname === '/' ? 'header_link active' : 'header_link'}
+          >
+            {t('home')}
+          </Link>
+          <Link
+            href="/about"
+            className={
+              pathname === '/about' ? 'header_link active' : 'header_link'
             }
           >
-            Home
-          </NavLink>
-          <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive ? 'header_link active' : 'header_link'
+            {t('about')}
+          </Link>
+
+          <Link
+            href="/404"
+            className={
+              pathname === '/404' ? 'header_link active' : 'header_link'
             }
           >
-            About
-          </NavLink>
-          <NavLink
-            to="/404"
-            className={({ isActive }) =>
-              isActive ? 'header_link active' : 'header_link'
-            }
-          >
-            404
-          </NavLink>
+            {t('404')}
+          </Link>
         </nav>
       </div>
       <div className="header_actions">
         <Button
           className="rounded_button"
-          text="Test error"
+          text={t('testError')}
           onClick={handleTestErrorClick}
         />
         <Button
           className="rounded_button"
-          text="Refresh data"
+          text={t('refresh')}
           onClick={handleRefreshData}
         />
         <Button
           className={`rounded_button ${isDarkTheme ? 'theme_button__dark' : ''}`}
-          text={isDarkTheme ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          text={isDarkTheme ? `${t('lightMode')}` : `${t('darkMode')}`}
           onClick={toggleTheme}
         />
+        <LanguageSwitcher />
       </div>
     </div>
   );

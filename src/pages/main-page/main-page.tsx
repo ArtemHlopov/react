@@ -1,4 +1,5 @@
-import { useState, useContext } from 'react';
+'use client';
+import React, { useState, useContext } from 'react';
 import { usePagination } from '../../shared/hooks/use-pagination';
 import type { FilterProps, PokemonListResponse } from '../../shared/models';
 import { SearchField } from '../../features/main-page/search-field/search-field';
@@ -14,11 +15,14 @@ import { ResultListPagination } from '../../features/main-page/result-list-pagin
 import { useLocalStorage } from '../../shared/hooks/use-local-storage';
 import pokeballImage from '../../assets/pokeball.png';
 import './main-page.css';
-import { Outlet } from 'react-router-dom';
 import { DarkThemeContext } from '../../shared/context/appThemeContext';
 import { getApiErrorMessage } from '../../shared/helpers/getApiErrorMessage';
 
-export const MainPage = ({ filter }: FilterProps) => {
+interface MainPageProps extends FilterProps {
+  children?: React.ReactNode;
+}
+
+export const MainPage = ({ filter, children }: MainPageProps) => {
   const { getLsValue, setLsValue } = useLocalStorage(LS_FILTER_KEY);
   const [currentFilter, setCurrentFilter] = useState<string>(
     () => filter || getLsValue()
@@ -118,7 +122,7 @@ export const MainPage = ({ filter }: FilterProps) => {
           ></ResultListPagination>
         )}
       </div>
-      <Outlet />
+      {children}
     </div>
   );
 };

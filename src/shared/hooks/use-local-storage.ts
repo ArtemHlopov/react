@@ -1,3 +1,4 @@
+'use client';
 import { useCallback } from 'react';
 
 export const useLocalStorage = (key: string) => {

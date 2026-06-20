@@ -5,7 +5,7 @@ const POKEMON_API_BASE_URL = 'https://pokeapi.co/api/v2';
 const DEFAULT_CACHE_TTL_SECONDS = 300;
 
 const configuredCacheTtl = Number(
-  import.meta.env.VITE_RTK_QUERY_CACHE_TTL_SECONDS
+  process.env.NEXT_PUBLIC_RTK_QUERY_CACHE_TTL_SECONDS
 );
 const cacheTtl = Number.isFinite(configuredCacheTtl)
   ? configuredCacheTtl
