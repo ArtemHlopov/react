@@ -30,3 +30,8 @@ h2 {
 .details_button:hover {
   transform: scale(1.3);
 }
+
+.details_image_wrapper {
+  position: relative;
+  height: 300px;
+}

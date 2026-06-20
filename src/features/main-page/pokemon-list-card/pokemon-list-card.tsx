@@ -15,7 +15,9 @@ import {
   toggleSelectedPokemon,
 } from '../../../store/selectedPokemonSlice';
 import { getApiErrorMessage } from '../../../shared/helpers/getApiErrorMessage';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from '../../../shared/navigation/navigation';
+import Image from 'next/image';
 
 interface PokemonCardProps extends CustomComponentProps {
   pokemonBaseInfo: PokemonListResponseResult;
@@ -85,7 +87,7 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
         <span>{pokemonName}</span>
       </h3>
       <div className="image_wrapper">
-        <img
+        <Image
           className={`pokemon_card_image ${isFetching ? 'pulse' : ''}`}
           src={imageSrc}
           alt={pokemonName}

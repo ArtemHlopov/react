@@ -4,7 +4,9 @@ import pokeballImage from '../../../assets/pokeball.png';
 import './details-panel.css';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
 import { getApiErrorMessage } from '../../../shared/helpers/getApiErrorMessage';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useRouter } from '../../../shared/navigation/navigation';
+import Image from 'next/image';
 
 export const DetailsPanel = () => {
   const params = useParams();
@@ -45,7 +47,12 @@ export const DetailsPanel = () => {
 
       {isFetching ? (
         <div>
-          <img className="spin" src={pokeballImage} alt="Loading" width="50" />
+          <Image
+            className="spin"
+            src={pokeballImage}
+            alt="Loading"
+            width="50"
+          />
           <p>Loading details...</p>
         </div>
       ) : error ? (
@@ -54,7 +61,7 @@ export const DetailsPanel = () => {
         <div>
           <h2>{data.name}</h2>
           <div className="details_image_wrapper">
-            <img src={getPokemonImageUrl()} alt={data.name} />
+            <Image src={getPokemonImageUrl()} alt={data.name} fill />
           </div>
           <p>Height: {data.height}</p>
           <p>Weight: {data.weight}</p>

@@ -17,6 +17,7 @@ import pokeballImage from '../../assets/pokeball.png';
 import './main-page.css';
 import { DarkThemeContext } from '../../shared/context/appThemeContext';
 import { getApiErrorMessage } from '../../shared/helpers/getApiErrorMessage';
+import Image from 'next/image';
 
 interface MainPageProps extends FilterProps {
   children?: React.ReactNode;
@@ -97,7 +98,7 @@ export const MainPage = ({ filter, children }: MainPageProps) => {
     <div className="main_page_wrapper">
       {isLoading ? (
         <div className="main_page_loader_overlay">
-          <img
+          <Image
             className="main_page_loader_image spin"
             src={pokeballImage}
             alt="Loading pokemon"

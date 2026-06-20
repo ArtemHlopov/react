@@ -7,10 +7,10 @@ import { useContext } from 'react';
 import { DarkThemeContext } from '../../context/appThemeContext';
 import { pokemonApi } from '../../services/api/api-service';
 import { useAppDispatch } from '../../../store/hooks';
-import { usePathname } from 'next/navigation';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { useTranslations } from 'next-intl';
-import { Link } from '../../navigation/navigation';
+import { Link, usePathname } from '../../navigation/navigation';
+import Image from 'next/image';
 
 export const Header = () => {
   const [error, setError] = useState(false);
@@ -36,7 +36,7 @@ export const Header = () => {
       className={`header_wrapper ${isDarkTheme ? 'header_wrapper__dark' : ''}`}
     >
       <div className="header_nav">
-        <img className="header_logo" src={pokedexImage} alt="pokedex" />
+        <Image className="header_logo" src={pokedexImage} alt="pokedex" />
         <nav>
           <Link
             href="/"
