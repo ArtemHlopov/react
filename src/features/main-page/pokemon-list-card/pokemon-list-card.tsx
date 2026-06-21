@@ -16,7 +16,7 @@ import {
 } from '../../../store/selectedPokemonSlice';
 import { getApiErrorMessage } from '../../../shared/helpers/getApiErrorMessage';
 import { useSearchParams } from 'next/navigation';
-import { usePathname, useRouter } from '../../../shared/navigation/navigation';
+import { useRouter } from '../../../i18n/navigation';
 import Image from 'next/image';
 
 interface PokemonCardProps extends CustomComponentProps {
@@ -32,7 +32,6 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   const { isDarkTheme } = useContext(DarkThemeContext);
   const dispatch = useAppDispatch();
@@ -91,6 +90,8 @@ export const PokemonListCard = ({ pokemonBaseInfo }: PokemonCardProps) => {
           className={`pokemon_card_image ${isFetching ? 'pulse' : ''}`}
           src={imageSrc}
           alt={pokemonName}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
 

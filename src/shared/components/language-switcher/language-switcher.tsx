@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { usePathname, useRouter } from '../../navigation/navigation';
+import { usePathname, useRouter } from '../../../i18n/navigation';
 import { Button } from '../button/button';
 
 export const LanguageSwitcher = () => {

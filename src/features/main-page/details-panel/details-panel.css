@@ -3,7 +3,7 @@
   gap: 1rem;
   display: flex;
   flex-direction: column;
-  max-width: 20dvw;
+  max-width: 300px;
   padding: 100px 1rem;
   background-color: var(--light-red);
   color: var(--white);

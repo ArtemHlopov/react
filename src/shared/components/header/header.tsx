@@ -9,7 +9,7 @@ import { pokemonApi } from '../../services/api/api-service';
 import { useAppDispatch } from '../../../store/hooks';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { useTranslations } from 'next-intl';
-import { Link, usePathname } from '../../navigation/navigation';
+import { Link, usePathname } from '../../../i18n/navigation';
 import Image from 'next/image';
 
 export const Header = () => {

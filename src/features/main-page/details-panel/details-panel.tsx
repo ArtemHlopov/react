@@ -5,7 +5,7 @@ import './details-panel.css';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
 import { getApiErrorMessage } from '../../../shared/helpers/getApiErrorMessage';
 import { useParams, useSearchParams } from 'next/navigation';
-import { useRouter } from '../../../shared/navigation/navigation';
+import { useRouter } from '../../../i18n/navigation';
 import Image from 'next/image';
 
 export const DetailsPanel = () => {
@@ -61,7 +61,12 @@ export const DetailsPanel = () => {
         <div>
           <h2>{data.name}</h2>
           <div className="details_image_wrapper">
-            <Image src={getPokemonImageUrl()} alt={data.name} fill />
+            <Image
+              src={getPokemonImageUrl()}
+              alt={data.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
           </div>
           <p>Height: {data.height}</p>
           <p>Weight: {data.weight}</p>

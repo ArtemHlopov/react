@@ -23,37 +23,26 @@ export const Flayout = () => {
     if (selectedPokemons.length === 0) {
       return;
     }
-
     setIsDownloading(true);
-
     try {
-      const csvHeaders = ['Name', 'Details URL'];
-      const csvRows = selectedPokemons.map((pokemon) => {
-        const name = pokemon.name || 'Unknown pokemon';
-        const url = pokemon.url || 'no details url';
-        return `"${name}","${url}"`;
+      const response = await fetch('/api/csv', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedPokemons),
       });
-
-      const csvContent = [csvHeaders.join(','), ...csvRows].join('\n');
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `${selectedPokemons.length}_items.csv`);
-      document.body.appendChild(link);
+      link.download = `${selectedPokemons.length}_items.csv`;
       link.click();
-      document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Downloading failed:', error);
     } finally {
       setIsDownloading(false);
     }
   };
-  if (selectedPokemons.length === 0) {
-    return null;
-  }
 
   return (
     <div

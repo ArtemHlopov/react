@@ -1,6 +1,6 @@
 'use client';
 import { useSearchParams } from 'next/navigation';
-import { usePathname, useRouter } from '../navigation/navigation';
+import { usePathname, useRouter } from '../../i18n/navigation';
 
 export const usePagination = (defaultPage = 1) => {
   const searchParams = useSearchParams();

@@ -23,7 +23,7 @@ interface MainPageProps extends FilterProps {
   children?: React.ReactNode;
 }
 
-export const MainPage = ({ filter, children }: MainPageProps) => {
+export default function MainPage({ filter, children }: MainPageProps) {
   const { getLsValue, setLsValue } = useLocalStorage(LS_FILTER_KEY);
   const [currentFilter, setCurrentFilter] = useState<string>(
     () => filter || getLsValue()
@@ -126,4 +126,4 @@ export const MainPage = ({ filter, children }: MainPageProps) => {
       {children}
     </div>
   );
-};
+}

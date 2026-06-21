@@ -1,6 +1,6 @@
-import { Link } from '../../shared/navigation/navigation';
+import { Link } from '../../i18n/navigation';
 import './error-page.css';
-export const ErrorPage = () => {
+export default function ErrorPage() {
   return (
     <div className="wrapper">
       <h1>404</h1>
@@ -10,4 +10,4 @@ export const ErrorPage = () => {
       </Link>
     </div>
   );
-};
+}
