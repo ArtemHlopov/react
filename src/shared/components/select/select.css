@@ -1,0 +1,15 @@
+select,
+option {
+  font-size: large;
+  padding: 0.5rem;
+  border-radius: var(--radius-rounded);
+  color: var(--white);
+}
+
+select {
+  background-color: var(--light-red);
+}
+
+.select__dark {
+  background-color: var(--dark-red);
+}

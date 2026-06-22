@@ -1,0 +1,26 @@
+{
+  "header": {
+    "home": "Home",
+    "about": "About",
+    "404": "404",
+    "testError": "Test error",
+    "refresh": "Refresh data",
+    "lightMode": "☀️ Light Mode",
+    "darkMode": "🌙 Dark Mode"
+  },
+  "mainPage": {
+    "search": "Search pokemon",
+    "noResults": "No results",
+    "loading": "Loading..."
+  },
+  "aboutPage": {
+    "description": "App where you can find your pokemon.",
+    "author": "Created by Artem Hlopov",
+    "home": "Home"
+  },
+  "errorPage": {
+    "title": "404",
+    "message": "Page not found",
+    "home": "Home"
+  }
+}
