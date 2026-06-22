@@ -1,3 +1,4 @@
+'use client';
 import { useCallback, useContext } from 'react';
 import { useGetPokemonDetailsQuery } from '../../../shared/services/api/api-service';
 import pokeballImage from '../../../assets/pokeball.png';

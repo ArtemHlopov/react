@@ -1,19 +1,17 @@
+'use client';
 import type { PaginationProps } from '../../../shared/models';
 import { Button } from '../../../shared/components/button/button';
-import { paginationService } from '../../../shared/services/api/api-service';
 import './result-list-pagination.css';
 import { Select } from '../../../shared/components/select/select';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
 import { useContext } from 'react';
+import { usePagination } from '../../../shared/hooks/use-pagination';
 
 export const ResultListPagination = ({
   previous,
   next,
-  onOffsetChange,
-  onLimitChange,
   total,
   disabled,
-  currentPage,
 }: PaginationProps) => {
   const defaultPageNumber = 1;
   const paginationOptions = [10, 20, 30];
@@ -22,22 +20,26 @@ export const ResultListPagination = ({
     value: opt,
   }));
   const { isDarkTheme } = useContext(DarkThemeContext);
+  const { currentPage, setPage, currentLimit, setLimit } = usePagination();
 
   const handlePreviousClick = (): void => {
-    if (previous && onOffsetChange) onOffsetChange();
+    if (previous) setPage(Math.max(1, currentPage - 1));
   };
 
   const handleNextClick = (): void => {
-    if (next && onOffsetChange) {
-      onOffsetChange(true);
+    if (next) {
+      setPage(currentPage + 1);
     }
   };
 
+  const totalPages = Math.ceil(
+    Number(total) / currentLimit || defaultPageNumber
+  );
+
   const handleSelectChange = (value: unknown): void => {
-    if (onLimitChange) {
-      onLimitChange(
-        !isNaN(Number(value)) ? Number(value) : paginationOptions[0]
-      );
+    const number = Number(value);
+    if (!isNaN(number)) {
+      setLimit(number);
     }
   };
 
@@ -52,26 +54,19 @@ export const ResultListPagination = ({
             text="<"
             disabled={disabled || currentPage <= 1}
           />
-          {currentPage} /{' '}
-          {Math.ceil(Number(total) / paginationService.limit) ||
-            defaultPageNumber}
+          {currentPage} /{totalPages}
           <Button
             id="next-page-btn"
             onClick={handleNextClick}
             text=">"
-            disabled={
-              disabled ||
-              currentPage >=
-                (Math.ceil(Number(total) / paginationService.limit) ||
-                  defaultPageNumber)
-            }
+            disabled={disabled || currentPage >= totalPages}
           />
         </div>
         <Select
           disabled={disabled}
           onSelectChange={handleSelectChange}
           options={selectOptions}
-          value={paginationService.limit}
+          value={currentLimit}
         ></Select>
       </div>
     </div>

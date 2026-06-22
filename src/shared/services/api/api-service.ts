@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { PokemonListResponse, PokemonDetails } from '../../models';
 
-const POKEMON_API_BASE_URL = 'https://pokeapi.co/api/v2';
+export const POKEMON_API_BASE_URL = 'https://pokeapi.co/api/v2';
 const DEFAULT_CACHE_TTL_SECONDS = 300;
 
 const configuredCacheTtl = Number(
@@ -42,18 +42,3 @@ export const pokemonApi = createApi({
 });
 
 export const { useGetPokemonListQuery, useGetPokemonDetailsQuery } = pokemonApi;
-
-class PaginationService {
-  offset: number = 0;
-  limit: number = 10;
-
-  setOffsetValue(value: number) {
-    this.offset = value;
-  }
-
-  setLimitValue(value: number) {
-    this.limit = value;
-  }
-}
-
-export const paginationService = new PaginationService();

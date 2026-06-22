@@ -8,9 +8,6 @@ export interface PaginationProps extends CustomComponentProps {
   next?: string | null;
   previous?: string | null;
   disabled?: boolean;
-  onLimitChange?: Callback;
-  onOffsetChange?: Callback;
-  currentPage: number;
 }
 
 export type CustomComponentProps = Record<string, unknown>;
