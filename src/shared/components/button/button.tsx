@@ -5,6 +5,7 @@ import type { Callback, CustomComponentProps } from '../../models';
 interface ButtonProps extends CustomComponentProps {
   id?: string;
   text?: string;
+  type?: 'button' | 'submit' | 'reset' | undefined;
   className?: string;
   disabled?: boolean;
   onClick?: Callback;
@@ -13,6 +14,7 @@ interface ButtonProps extends CustomComponentProps {
 export const Button = ({
   id,
   text = 'Click',
+  type = 'button',
   className,
   disabled = false,
   onClick,
@@ -26,6 +28,7 @@ export const Button = ({
   return (
     <div className="button_wrapper">
       <button
+        type={type}
         id={id || componentId}
         className={className}
         onClick={handleClick}

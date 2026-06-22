@@ -1,27 +1,22 @@
 'use client';
 import { useCallback, useContext } from 'react';
-import { useGetPokemonDetailsQuery } from '../../../shared/services/api/api-service';
 import pokeballImage from '../../../assets/pokeball.png';
 import './details-panel.css';
 import { DarkThemeContext } from '../../../shared/context/appThemeContext';
 import { getApiErrorMessage } from '../../../shared/helpers/getApiErrorMessage';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from '../../../i18n/navigation';
 import Image from 'next/image';
+import type { PokemonDetails } from '../../../shared/models';
 
-export const DetailsPanel = () => {
-  const params = useParams();
-  const name = params?.name as string;
+interface DetailsPanelProps {
+  data: PokemonDetails | null;
+  errorMsg?: string;
+}
+
+export const DetailsPanel = ({ data, errorMsg }: DetailsPanelProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const normalizedName = (name ?? '').toLowerCase();
-
-  const { data, isFetching, error } = useGetPokemonDetailsQuery(
-    normalizedName,
-    {
-      skip: !name,
-    }
-  );
   const { isDarkTheme } = useContext(DarkThemeContext);
 
   const getPokemonImageUrl = useCallback(() => {
@@ -46,18 +41,8 @@ export const DetailsPanel = () => {
         X
       </button>
 
-      {isFetching ? (
-        <div>
-          <Image
-            className="spin"
-            src={pokeballImage}
-            alt="Loading"
-            width="50"
-          />
-          <p>Loading details...</p>
-        </div>
-      ) : error ? (
-        <h2>{getApiErrorMessage(error)}</h2>
+      {errorMsg ? (
+        <h2>{errorMsg}</h2>
       ) : data ? (
         <div>
           <h2>{data.name}</h2>
